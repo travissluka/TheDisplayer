@@ -1,0 +1,4 @@
+Makefile
+display
+*.o
+moc_*
