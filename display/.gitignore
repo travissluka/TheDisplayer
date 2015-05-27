@@ -2,3 +2,4 @@ Makefile
 display
 *.o
 moc_*
+*.pyc
