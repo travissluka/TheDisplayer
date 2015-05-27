@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """ Module to parse NWS RSS/XML feeds
     C. Martin - 5/2015
 

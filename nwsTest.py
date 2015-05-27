@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import nwsfeed
 
 county = 'TXC363'
