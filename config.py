@@ -6,6 +6,7 @@ fullscreen = False
 
 plugins = [
     'aosc',
+    'alerts',
     'sample'
  
 ]
