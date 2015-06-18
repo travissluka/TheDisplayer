@@ -37,6 +37,10 @@ h2 {
 }
 
 
+
+
+
+
 .footer{
     border-top: 3px solid #555;
 }
@@ -46,7 +50,7 @@ h2 {
 
 .footer_clock{
   padding-top:15px;
-  padding-right: 150px;
+  padding-right: 50px;
   float:right;
   font-family: 'Roboto Condensed';
   font-size:50px;
