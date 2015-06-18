@@ -28,8 +28,8 @@
 const int TIMER_FREQUENCY   = 1000;  // how often python logic is called (msec)
 const int FULLSCREEN_HEIGHT = 1920;
 const int FULLSCREEN_WIDTH  = 1080;
-const int HEADER_HEIGHT     = 100;
-const int FOOTER_HEIGHT     = 150;
+const int HEADER_HEIGHT     = 120;
+const int FOOTER_HEIGHT     = 130;
 
 // Handles to the required static python objects
 PyObject* pyModule;  // handle to main python script module
