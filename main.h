@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QWebView>
 #include <QTimer>
-
+#include <QList>
 
 
 class MainWindow : public QMainWindow
@@ -21,6 +21,8 @@ protected:
   void resizeEvent(QResizeEvent* event) override;
 
 protected:
+  QList<QWebView*> webList;
+  
   QWebView* header;
   QWebView* footer;
   QWebView* center_full;

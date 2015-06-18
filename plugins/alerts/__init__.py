@@ -3,7 +3,7 @@ import os
 import nwsfeed as nwsf
 
 location = 'MDC003'
-location = 'TXC001'
+#location = 'TXC001'
 
 htmlpfx = os.path.abspath(os.path.dirname(__file__))
 

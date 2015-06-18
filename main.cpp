@@ -1,14 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 // TheDisplayer
+//
 // A Qt based web browser with a python based backend to handle automatic
 //  scheduling of the AOSC signage in the main hall.
 // The python section is responsible for loading a series of user defined 
 //  plugins, each responsible for a different type of display. The plugin
 //  specifies logic to define the priority, size, expected display durations,
 //  and method of generating the html to display.
+//
+//  Travis T. Sluka (tsluka@atmos.umd.edu)
+//  Cory T. Martin  (cmartin@atmos.umd.edu)
 ////////////////////////////////////////////////////////////////////////////////
-#include <Python.h>
 
+#include <Python.h>
 #include <signal.h>
 
 #include <QApplication>
@@ -17,10 +21,15 @@
 #include <QtGlobal>
 #include <QString>
 #include <QResizeEvent>
+#include <QDesktopWidget>
 
 #include "main.h"
 
-const int TIMER_FREQUENCY = 1000;
+const int TIMER_FREQUENCY   = 1000;  // how often python logic is called (msec)
+const int FULLSCREEN_HEIGHT = 1920;
+const int FULLSCREEN_WIDTH  = 1080;
+const int HEADER_HEIGHT     = 100;
+const int FOOTER_HEIGHT     = 150;
 
 // Handles to the required static python objects
 PyObject* pyModule;  // handle to main python script module
@@ -32,6 +41,7 @@ PyObject* pyUpdate;  // handle to main python script update method
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char *argv[])
 {
+  
   //ensure command line argument gives name of config file
   if (argc != 2){
     qCritical("usage: \n  display <config_file.py>");
@@ -39,9 +49,9 @@ int main(int argc, char *argv[])
   }
   QString configFile = argv[1];
 
-
-  //Initialize Python, import the required 'display' module and save references
-  // to it, then tell the display to initialize
+  
+  //Initialize Python, import the python 'main' module and save references
+  // to it, then tell the main.py to initialize
   Py_SetProgramName(argv[0]);
   Py_Initialize(); 
   PyRun_SimpleString("import sys; sys.path.insert(0,'.'); import main");
@@ -54,9 +64,9 @@ int main(int argc, char *argv[])
   QString pyInitCommand = "main.init('"+configFile+"');";
   PyRun_SimpleString(pyInitCommand.toAscii());
 
+  
   //Get configuration parameters from the config.py file that Qt needs
   bool fullScreen;
-  //  PyObject* args;
   PyObject* result;
   PyObject* func;
   func = PyObject_GetAttrString(pyModule, (char*)"isFullscreen");
@@ -67,24 +77,34 @@ int main(int argc, char *argv[])
   Py_DECREF(result);
   Py_DECREF(func);
 
-
+  
   //initialize Qt
   QApplication app(argc, argv);
   MainWindow mainWin(pyUpdate);
   if (fullScreen)
     mainWin.showFullScreen();
-  else
-    mainWin.showMaximized();
+  else {
+    // if not full screen, show as a scaled version with 9:16 ratio
+    QRect winSize = QApplication::desktop()->screenGeometry();
+    int w,h;
+    h = winSize.height()-100;
+    w = h/16.0*9.0;
+    mainWin.setFixedSize(w,h);
+    mainWin.show();
+  }
   QApplication::setOverrideCursor(Qt::BlankCursor);
-    
+
+  
   //force everything to shutdown if ctrl-c is pressed
   //TODO: this should be changed to handle a graceful shutdown
   signal(SIGINT,SIG_DFL);
 
+  
   //run the main window loop
   // calling python update logic within the timer in the main window
   int val = app.exec();
 
+  
   //clean up after everything is done
   Py_Finalize();
   return val;
@@ -103,17 +123,20 @@ MainWindow::MainWindow(PyObject* pyUpdate) {
   //TODO, dynamically create frames as specified in config file
   this->header = new QWebView(this);
   this->footer = new QWebView(this);
-  this->center_full   = new QWebView(this);
+  //  this->center_full   = new QWebView(this);
   this->center_half_1 = new QWebView(this);
   this->center_half_2 = new QWebView(this);
+  this->webList << this->header << this->footer
+    //<< this->center_full
+		<< this->center_half_1	<< this->center_half_2;
 
-
+  
   //setup the main timer that periodically makes calls to the python logic
   // and determines what should be reloaded
   timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(updateTimer()));
   timer->start(TIMER_FREQUENCY);
-   updateTimer();
+  updateTimer();
 }
 
 
@@ -122,19 +145,29 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   const int width  = event->size().width();
   const int height = event->size().height();
 
-  const int headerHeight = 100;
-  const int footerHeight = 100;
+  // check to see if we aren't the full width/height, (debug mode)
+  //  if so scale the web widgets down
+  float ratio = 1.0;
+  if (width != FULLSCREEN_WIDTH){
+    ratio = (float)width/FULLSCREEN_WIDTH;
+  }
+  const int headerHeight = HEADER_HEIGHT*ratio;
+  const int footerHeight = FOOTER_HEIGHT*ratio;
+  for (int i = 0; i < this->webList.size(); ++i) {
+     this->webList[i]->setZoomFactor(ratio);
+  }
  
-
+  //set the position of the web widgets
   this->header->setGeometry(0,0,width,headerHeight);
   this->footer->setGeometry(0,height-footerHeight,width,footerHeight);
-  this->center_full->setGeometry(0,headerHeight, width,height-headerHeight-footerHeight);
+  //  this->center_full->setGeometry(0,headerHeight, width,height-headerHeight-footerHeight);
   this->center_half_1->setGeometry(
 	     0, headerHeight,
 	     width, floor((height-headerHeight-footerHeight)/2));
   this->center_half_2->setGeometry(
 	     0, headerHeight+floor((height-headerHeight-footerHeight)/2),
 	     width, height-headerHeight-floor((height-headerHeight-footerHeight)/2)-footerHeight);
+
 }
 
 
