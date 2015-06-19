@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
   pyUpdate              = PyObject_GetAttrString(pyModule,(char*)"update");
     if (pyUpdate == 0)  qFatal("Unable to load pyUpdate function");
   QString pyInitCommand = "main.init('"+configFile+"');";
-  PyRun_SimpleString(pyInitCommand.toAscii());
+  PyRun_SimpleString(pyInitCommand.toStdString().c_str());
 
   
   //Get configuration parameters from the config.py file that Qt needs
