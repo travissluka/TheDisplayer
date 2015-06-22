@@ -25,15 +25,25 @@
 
 #include "main.h"
 
-const int TIMER_FREQUENCY   = 1000;  // how often python logic is called (msec)
+const int TIMER_FREQUENCY   = 10000;  // how often python logic is called (msec)
 const int FULLSCREEN_HEIGHT = 1920;
 const int FULLSCREEN_WIDTH  = 1080;
-const int HEADER_HEIGHT     = 120;
-const int FOOTER_HEIGHT     = 130;
+
+int PAD_LEFT          = 22;
+int PAD_RIGHT         = 21;
+int PAD_TOP           = 38;
+int PAD_BOTTOM        = 0;
+
+int HEADER_HEIGHT     = 120;
+int FOOTER_HEIGHT     = 130;
+
+bool fullScreen = false;
+
 
 // Handles to the required static python objects
 PyObject* pyModule;  // handle to main python script module
 PyObject* pyUpdate;  // handle to main python script update method
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +55,7 @@ int main(int argc, char *argv[])
   //ensure command line argument gives name of config file
   if (argc != 2){
     qCritical("usage: \n  display <config_file.py>");
-    return 1;
+    //    return 1;
   }
   QString configFile = argv[1];
 
@@ -59,24 +69,24 @@ int main(int argc, char *argv[])
     if (moduleStr == 0) qFatal("Unable to load python files");
   pyModule              = PyImport_Import(moduleStr);
     if (pyModule == 0)  qFatal("Unable to load main python 'main' module");
+  Py_INCREF(pyModule); //no idea if this is required
   pyUpdate              = PyObject_GetAttrString(pyModule,(char*)"update");
     if (pyUpdate == 0)  qFatal("Unable to load pyUpdate function");
+  Py_INCREF(pyUpdate);
   QString pyInitCommand = "main.init('"+configFile+"');";
   PyRun_SimpleString(pyInitCommand.toStdString().c_str());
 
   
   //Get configuration parameters from the config.py file that Qt needs
-  bool fullScreen;
   PyObject* result;
   PyObject* func;
-  func = PyObject_GetAttrString(pyModule, (char*)"isFullscreen");
-    if (func == 0)  qFatal("unable to load main.isFullscreen");
+  func = PyObject_GetAttrString(pyModule, (char*)"getConfig");
+    if (func == 0)  qFatal("unable to load main.getConfig");
   result = PyObject_CallObject(func, NULL);
-    if (result == 0)  qFatal("unable to run main.isFullscreen");
-  fullScreen = (result == Py_True);
+  PyArg_ParseTuple(result, "biiii",
+		   &fullScreen, &PAD_LEFT, &PAD_TOP, &PAD_RIGHT, &PAD_BOTTOM);
   Py_DECREF(result);
-  Py_DECREF(func);
-
+ 
   
   //initialize Qt
   QApplication app(argc, argv);
@@ -141,32 +151,30 @@ MainWindow::MainWindow(PyObject* pyUpdate) {
 
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
-  //TODO: handle different display layouts
-  const int width  = event->size().width();
-  const int height = event->size().height();
+
+  const int width  = event->size().width() - PAD_LEFT - PAD_RIGHT;
+  const int height = event->size().height() - PAD_TOP - PAD_BOTTOM;
 
   // check to see if we aren't the full width/height, (debug mode)
   //  if so scale the web widgets down
   float ratio = 1.0;
-  if (width != FULLSCREEN_WIDTH){
+  if (!fullScreen){
     ratio = (float)width/FULLSCREEN_WIDTH;
+    for (int i = 0; i < this->webList.size(); ++i) {
+      this->webList[i]->setZoomFactor(ratio);
+    }
   }
-  const int headerHeight = HEADER_HEIGHT*ratio;
-  const int footerHeight = FOOTER_HEIGHT*ratio;
-  for (int i = 0; i < this->webList.size(); ++i) {
-     this->webList[i]->setZoomFactor(ratio);
-  }
+
+  int headerHeight = HEADER_HEIGHT*ratio;
+  int footerHeight = FOOTER_HEIGHT*ratio;
+  int halfHeight = floor((height-headerHeight-footerHeight)/2);
  
   //set the position of the web widgets
-  this->header->setGeometry(0,0,width,headerHeight);
-  this->footer->setGeometry(0,height-footerHeight,width,footerHeight);
+  this->header->setGeometry(PAD_LEFT, PAD_TOP, width, headerHeight);
   //  this->center_full->setGeometry(0,headerHeight, width,height-headerHeight-footerHeight);
-  this->center_half_1->setGeometry(
-	     0, headerHeight,
-	     width, floor((height-headerHeight-footerHeight)/2));
-  this->center_half_2->setGeometry(
-	     0, headerHeight+floor((height-headerHeight-footerHeight)/2),
-	     width, height-headerHeight-floor((height-headerHeight-footerHeight)/2)-footerHeight);
+  this->center_half_1->setGeometry(PAD_LEFT, headerHeight+PAD_TOP, width, halfHeight);
+  this->center_half_2->setGeometry(PAD_LEFT, headerHeight+PAD_TOP+halfHeight,  width, halfHeight);
+  this->footer->setGeometry(PAD_LEFT, headerHeight+PAD_TOP+2*halfHeight, width, footerHeight);
 
 }
 

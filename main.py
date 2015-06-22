@@ -43,8 +43,19 @@ currentDisplays = {
     'half_2':None}
 
 
-def isFullscreen():
-    return config.fullscreen
+def getConfig():
+    #TODO ensure the required config parameters are present
+    if not config.fullscreen:
+        config.pad_left=0
+        config.pad_top=0
+        config.pad_right=0
+        config.pad_bottom=0
+    return (
+        config.fullscreen,
+        config.pad_left,
+        config.pad_top,
+        config.pad_right,
+        config.pad_bottom)
 
 
 ################################################################################
