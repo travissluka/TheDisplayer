@@ -9,7 +9,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 QMAKE_CXXFLAGS += -std=c++11 -I/usr/include/python2.7
 QMAKE_LFLAGS += -lpython2.7
-QT += core webkitwidgets
+QT += core webkitwidgets webkit
 
 # Input
 SOURCES += main.cpp

@@ -28,6 +28,7 @@ import sys
 import importlib
 import re
 import datetime as dt
+import traceback
 
 
 log.info("TheDisplayer - Display server for AOSC hallway monitors ")
@@ -55,6 +56,32 @@ def getClassName(c):
 
 
 ################################################################################
+def _getParams(p):
+    suppressMoreWarn = False
+    cn = getClassName(p['script'])
+    try:
+        params = p['script'].getParams()
+        for k in params:
+            p[k] = params[k]
+    except:
+        log.error(cn+":  Failure in 'getParams()', disabling plugin")
+        traceback.print_exc()
+        suppressMoreWarn = True
+
+    # make sure certain key parameters are set, if not fill them in
+    #  with some default values to keep the system happy
+    defaults = {
+        'enabled':       False,
+        'updateFreq':    dt.timedelta(seconds=30),
+        'dispDuration':  dt.timedelta(minutes=5),
+        'priority':      (0,1.0),
+        'location':      ''}
+    for d in defaults:
+        if d not in p:
+            p[d] = defaults[d]
+            if not suppressMoreWarn:
+                log.error(
+                    cn+': {0} not defined by getParams(), setting to default "{1}"'.format(d,str(p[d])))
 
 
 def init(configFile):
@@ -84,11 +111,15 @@ def init(configFile):
             log.error('Plugin: "{0}" specified in config is not available.'
               .format(cp))
         else:
+          try:
             plugin     = importlib.import_module('plugins.'+cp)
             newClasses = [{'script':p()} for p in plugin.displays]
             for d in newClasses:
                 log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))
             plugins += newClasses
+          except:
+            log.error('Cannot load plugin "{0}", disabling'.format(cp))
+            traceback.print_exc()
 
     ## initialize some of the fields for each display plugin
     for p in plugins:
@@ -97,13 +128,7 @@ def init(configFile):
         p['lastUpdate'] = dt.datetime.now()
         p['lastStart']  = dt.datetime.now() - dt.timedelta(days=300) 
         p['lastEnd']    = dt.datetime.now() - dt.timedelta(days=300) 
-        try:
-            params = p['script'].getParams()
-            for k in params:
-                p[k] = params[k]
-        except:
-            log.error("Failure in 'getParams()' call to "+getClassName(p['script']))
-      
+        _getParams(p)
 
 
 ################################################################################
@@ -113,7 +138,6 @@ def init(configFile):
 
 def update():
  try:                           
-#    log.debug("display.update()")
     global currentDisplays
 
     updates = {}
@@ -121,15 +145,10 @@ def update():
     # update the parameters for all plugins that are due for an updating
     for p in plugins:
         if (dt.datetime.now()-p['lastUpdate']) >= p['updateFreq']:
-            
-            log.debug("Calling getParams() for "+getClassName(p['script']))
+            cn = getClassName(p['script'])
+            log.debug("Calling getParams() for "+cn)
             p['lastUpdate'] = dt.datetime.now()
-            try:
-                params = p['script'].getParams()
-                for k in params:
-                    p[k] = params[k]
-            except Exception as inst:
-                log.error("Failure in 'getParams()' call to "+getClassName(p['script']))
+            _getParams(p)
 
     #find a plugin to show for each display location
     for loc in currentDisplays:
@@ -175,11 +194,18 @@ def update():
                       
         #update with the new page if we found one
         if newDisp:
+            cn = getClassName(newDisp['script'])
             newDisp['lastEnd'] = dt.datetime.now()
             newDisp['lastStart'] = dt.datetime.now()
             currentDisplays[loc] = newDisp
-            updates[loc] = newDisp['script'].getPage()
-            log.debug('Setting "{0}" to {1}'.format(loc,getClassName(newDisp['script'])))
+            try:
+              newPage = newDisp['script'].getPage()
+              assert(type(newPage) == str)
+              updates[loc] = newPage
+              log.debug('Setting "{0}" to {1}'.format(loc,cn))
+            except Exception as inst:
+              log.error(cn+":  error in calling getPage(), disabling plugin")
+              newDisp['enabled']=False
 
         #TODO, don't tell the c++ code to update if the page is the same and 
         # doesn't need refreshing
@@ -187,10 +213,7 @@ def update():
 
 
  except Exception as inst:
-     import traceback
- #     #TODO: finer grained error handling, skip individual plugins that fail 
-     log.critical("Error with python update()")
+     log.critical("Severe error with python update(), you probably killed the program, thanks alot.")
      log.critical(inst)
-     traceback.print_exec()
-     
+     traceback.print_exc()    
      return '';
