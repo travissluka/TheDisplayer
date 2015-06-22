@@ -121,6 +121,7 @@ def update():
     # update the parameters for all plugins that are due for an updating
     for p in plugins:
         if (dt.datetime.now()-p['lastUpdate']) >= p['updateFreq']:
+            
             log.debug("Calling getParams() for "+getClassName(p['script']))
             p['lastUpdate'] = dt.datetime.now()
             try:
@@ -186,7 +187,10 @@ def update():
 
 
  except Exception as inst:
+     import traceback
  #     #TODO: finer grained error handling, skip individual plugins that fail 
      log.critical("Error with python update()")
      log.critical(inst)
+     traceback.print_exec()
+     
      return '';

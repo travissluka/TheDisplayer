@@ -1,16 +1,46 @@
-body{
- background-color:#FF0000;
- color:#FFFFFF;
+.severity3{
+    background-color:#F0F;
+    color:#FFF;
+}
+.severity2{
+    background-color:#F00;
+    color:#FFF;
+}
+.severity1{
+    background-color:#FF0;
+    color:#000;
+}
+.severity0{
+    background-color:#009;
+    color:#FFF;
 }
 
-h1{
- text-align:center;
+
+.wrapper{
+    display:table;
+    height:100%;
+    width:100%;
 }
 
-.office{
+.mainAlert{
+    displa;
+    width:100%;
+    vertical-align:middle;
+    text-align:center;
+    font-size:45px;
+    font-weight:bold;
+}
+.topAlerts{
+    font-size:30px;
+    display: table-cell;
+    vertical-align:middle;
+
+}
+
+.leftbox{
     float:left;
+    width:40%;
 }
-
-.issued{
-    float:right;
+.rightbox{
+    float:left;
 }
