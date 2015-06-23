@@ -18,7 +18,7 @@ public slots:
   void updateTimer();
 
 protected:
-  void resizeEvent(QResizeEvent* event) override;
+  void resizeEvent(QResizeEvent* event);
 
 protected:
   QList<QWebView*> webList;

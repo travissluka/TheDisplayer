@@ -9,7 +9,7 @@ import re
 #countycode='MDC510' # baltimore city
 countycode='MDC033' # College Park
 url='http://alerts.weather.gov/cap/wwaatmget.php?x='+countycode+'&y=0'
-url='http://alerts.weather.gov/cap/mn.php?x=0'
+#url='http://alerts.weather.gov/cap/md.php?x=0'
 
 #TODO, wrap these variables with a lock
 mainAlert = None
@@ -109,7 +109,7 @@ class Header:
         return params
         
     def getPage(self):
-        return htmlpfx+'/header.html'
+        return 'file://'+htmlpfx+'/header.html'
 
     
 class Footer:
@@ -133,7 +133,7 @@ class Footer:
         return params
     
     def getPage(self):
-        return htmlpfx+'/footer.html'
+        return 'file://'+htmlpfx+'/footer.html'
 
     
 class AlertText:
@@ -162,7 +162,7 @@ class AlertText:
   </html>''')
         return params
     def getPage(self):
-        return htmlpfx+'/alerthalf.html'
+        return 'file://'+htmlpfx+'/alerthalf.html'
 
     
     
