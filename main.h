@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QWebView>
 #include <QTimer>
+#include <QList>
+
 
 
 
@@ -18,9 +20,14 @@ public slots:
   void updateTimer();
 
 protected:
-  void resizeEvent(QResizeEvent* event) override;
+  void resizeEvent(QResizeEvent* event);
 
 protected:
+<<<<<<< HEAD
+=======
+  QList<QWebView*> webList;
+  
+>>>>>>> dev-travis
   QWebView* header;
   QWebView* footer;
   QWebView* center_full;

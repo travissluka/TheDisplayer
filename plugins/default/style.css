@@ -1,0 +1,60 @@
+body {
+  overflow: hidden;
+  padding:0px;
+  margin:0px;
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+h1, h2 {
+  font-family: 'Roboto Condensed';
+  font-size: 45px;
+  margin:0px;
+}
+h2 {
+  font-size: 25px;
+  
+}
+
+.outer {
+ display: table;
+ position: relative;
+ height:100%;
+ width: 100%;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+  border-bottom: 3px solid #555;
+}
+
+.inner {
+    margin-left:auto;
+    margin-right:auto;
+    width: 900px;
+    text-align:center;
+}
+
+
+
+
+
+
+.footer{
+    border-top: 3px solid #555;
+}
+.footer_logo{
+  float:left;
+}
+
+.footer_clock{
+  padding-top:15px;
+  padding-right: 50px;
+  float:right;
+  font-family: 'Roboto Condensed';
+  font-size:50px;
+}
+#clock_date{
+    font-size:30px;
+}

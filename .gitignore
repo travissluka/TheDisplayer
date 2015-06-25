@@ -3,3 +3,4 @@ display
 *.o
 moc_*
 *.pyc
+*~
