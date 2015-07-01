@@ -7,7 +7,7 @@ globalParams = {
     'enabled'     : True,
     'updateFreq'  : dt.timedelta(minutes=10),
     'dispDuration': dt.timedelta(seconds=60),
-    'priority'    : (0,1.0),
+    'priority'    : (1,1.0),
     'location'    : 'half',
 }
 

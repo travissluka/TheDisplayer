@@ -16,6 +16,8 @@
 }
 
 
+
+
 .wrapper{
     display:table;
     height:100%;
@@ -36,11 +38,17 @@
     vertical-align:middle;
 
 }
-
-.leftbox{
-    float:left;
-    width:40%;
+.scrollcontainer{
+    height:100%;
 }
-.rightbox{
-    float:left;
+
+.summary {
+    font-size:23px;
+    margin: 0px;
+    overflow:hidden;
+    padding-bottom:8em;
+}
+.instructions{
+    font-size:25px;
+    font-weight:bold;
 }
