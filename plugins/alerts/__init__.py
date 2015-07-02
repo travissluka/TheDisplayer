@@ -170,7 +170,6 @@ class AlertText:
             desc = desc.replace('*','</p><p>*')
             inst = faInfo['instruction']
             desc = desc+'<p class="instructions">'+inst+'</p>'
-            print fullAlert['alert']['info'].keys()
             with open(htmlpfx+'/alerthalf.html','w') as html:
                 html.write('''
   <html><head>

@@ -1,4 +1,4 @@
-
+debug      = True
 fullscreen = False
 
 pad_left   = 22
