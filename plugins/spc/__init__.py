@@ -9,7 +9,8 @@
 ## maps are shown as well
 ##
 ## TODO: Still has some bugs, sometimes our locations is not correctly
-##   determined to be in the TSTM shape
+##   determined to be in the TSTM shape, other times it is when it should
+##   not be
 ################################################################################
 import datetime as dt
 import os
@@ -21,16 +22,16 @@ import urllib
 
 location = (38.8967, 76.9275)   # College Park, MD
 
-## The categorical outlook levels in order of severity are:
+## The categorical outlook levels in ascending order of severity are:
 ##   (TSTM, MRGL, SLGT, ENH, MDT, HIGH)
 
-minLocOutlook = "MRGL"          # minimum level of convection probability
+minLocOutlook = "TSTM"          # minimum level of convection probability
                                 # for our local area to trigger the map shown
 
 minNatOutlook = "ENH"           # same as above, except for the whole nation
 
 
-dispTime = 5000                 # time (msec) to show each image in slideshow
+dispTime = 6000                 # time (msec) to show each image in slideshow
 
 
 #####################################################################
@@ -38,7 +39,7 @@ dispTime = 5000                 # time (msec) to show each image in slideshow
 htmlpfx = os.path.abspath(os.path.dirname(__file__))
 
 globalParams = {
-    'enabled'     : True,
+    'enabled'     : False,
     'updateFreq'  : dt.timedelta(minutes=30),
     'dispDuration': dt.timedelta(seconds=45),
     'priority'    : (1,2.0),
@@ -97,7 +98,7 @@ class SPC:
             html.write('''
 <html>
   <head>
-    <link rel="stylesheet" type-"text/css" href="../common/style.css">
+    <link rel="stylesheet" type="text/css" href="../common/style.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="../common/jquery.min.js"></script>
     <script>
@@ -105,9 +106,9 @@ class SPC:
         $("#slideshow > div:gt(0)").hide();
         setInterval(function() {
           $('#slideshow > div:first')
-          .fadeOut(1000)
+           .hide()
           .next()
-          .fadeIn(1000)
+          .show()
           .end()
           .appendTo('#slideshow');
         },  '''+str(dispTime)+''');

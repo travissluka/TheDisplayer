@@ -39,7 +39,10 @@
 
 }
 .scrollcontainer{
-    height:100%;
+    height:90%;
+    top:40px;
+    position:relative;
+    overflow:hidden;
 }
 
 .summary {
