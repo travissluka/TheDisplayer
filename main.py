@@ -12,7 +12,6 @@
 import logging
 logging.basicConfig(format='%(asctime)-13s [%(levelname)s] %(message)s')
 log = logging.getLogger('')
-log.setLevel(logging.DEBUG)
 logging.addLevelName(logging.INFO, "\033[01;37mINFO \033[00m")
 logging.addLevelName(logging.ERROR, "\033[01;31mERROR\033[00m")
 logging.addLevelName(logging.WARN, "\033[01;33mWARN \033[00m")
@@ -119,6 +118,13 @@ def init(configFile):
     if reg:
         configFile = reg.group(1)
     config = importlib.import_module(configFile)
+
+    ## set the logger level based on the config.debug flag
+    if config.debug:
+        log.setLevel(logging.DEBUG)
+    else:
+        log.setLevel(logging.INFO)       
+        
 
     ## get a list of the plugins available
     availPlugins=[]

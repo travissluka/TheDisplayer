@@ -92,6 +92,8 @@ severity = None
 htmlpfx = os.path.abspath(os.path.dirname(__file__))
 
 
+################################################################################
+
 def getAlerts():
     # get the feed and parse it
     atomfeed=feedparser.parse(url)
@@ -158,6 +160,10 @@ def getAlerts():
     return mainAlert, topAlerts, severity
 
 
+
+################################################################################
+
+
     
 class Header:
     def getParams(self):
@@ -166,8 +172,8 @@ class Header:
         
         params = {}
         params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(seconds=30)
-        params['dispDuration'] = dt.timedelta(minutes=5)
+        params['updateFreq']   = dt.timedelta(minutes=1)
+        params['dispDuration'] = dt.timedelta(minutes=1)
         params['priority']     = (3,1.0)
         params['location']     = 'header'
 
@@ -184,14 +190,17 @@ class Header:
     def getPage(self):
         return 'file://'+htmlpfx+'/header.html'
 
+
+################################################################################
+
     
 class Footer:
     def getParams(self):
         global mainAlert, topAlerts       
         params = {}
         params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(seconds=60)
-        params['dispDuration'] = dt.timedelta(minutes=5)
+        params['updateFreq']   = dt.timedelta(minutes=1)
+        params['dispDuration'] = dt.timedelta(minutes=1)
         params['priority']     = (3,1.0)
         params['location']     = 'footer'
         if mainAlert:
@@ -208,36 +217,54 @@ class Footer:
     def getPage(self):
         return 'file://'+htmlpfx+'/footer.html'
 
+
+################################################################################
+
     
 class AlertText:
     def getParams(self):
         params = {}
         params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(seconds=60)
-        params['dispDuration'] = dt.timedelta(minutes=5)
+        params['updateFreq']   = dt.timedelta(minutes=1)
+        params['dispDuration'] = dt.timedelta(minutes=1)
         params['priority']     = (1,1.0)
+        params['location']     = 'half'
         if severity > 0:
             params['priority']     = (3,1.0)
-            
-        params['location']     = 'half'
+
+        ####################
+        # generate the html
         if mainAlert:
+            # get the full info
+            xmldata = urllib2.urlopen(mainAlert['link']).read()
+            fullAlert =  xmltodict.parse(xmldata)
+            faInfo = fullAlert['alert']['info']
+            desc = '<p>'+faInfo['description'].replace('\n','</br>')+'</p>'
+            desc = desc.replace('*','</p><p>*')
+            inst = faInfo['instruction']
+            desc = desc+'<p class="instructions">'+inst+'</p>'
             with open(htmlpfx+'/alerthalf.html','w') as html:
                 html.write('''
-  <html><head><link rel="stylesheet" type="text/css" href="style.css"></head>
-  <body class="alerthalf">
-    <div class="leftbox">
-      <div class="mainAlert">'''+mainAlert['cap_event']+'''</div>
-      <div>'''+mainAlert['cap_effective']+'''</div>
-      <div>'''+mainAlert['cap_expires']+'''</div>
-    </div>
-    <div class="summary rightbox">'''+mainAlert['summary']+'''</div>
+  <html><head>
+   <link rel="stylesheet" type="text/css" href="jscroller2-1.1.css">
+   <link rel="stylesheet" type="text/css" href="style.css">
+
+   <script type="text/javascript" src="jscroller2-1.61.js"></script>            
+  </head>
+  <body>
+      <div class="scrollcontainer">
+      <div class="summary jscroller2_up jscroller2_delay-2 jscroller2_speed-40">'''+desc+'''</div>
+      <div class="summary jscroller2_up_endless jscroller2_speed-40">'''+desc+'''</div>
+</div>
   </body>
   </html>''')
         return params
+
     def getPage(self):
         return 'file://'+htmlpfx+'/alerthalf.html'
 
-    
+
+################################################################################    
     
 
 
