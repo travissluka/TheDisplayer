@@ -33,7 +33,7 @@ import traceback
 log.info("TheDisplayer - Display server for AOSC hallway monitors ")
 
 ## global variables
-plugins = []    
+plugins = []
 config = None
 currentDisplays = {
     'header':None,
@@ -102,7 +102,7 @@ def init(configFile):
 
     ## read in the configuration file, remove the "py" at the
     ## end of the name if its there
-    log.info('Reading in configuration file "{0}"'.format(configFile))    
+    log.info('Reading in configuration file "{0}"'.format(configFile))
     reg = re.search('(.*)(\.py)+', configFile)
     if reg:
         configFile = reg.group(1)
@@ -112,8 +112,8 @@ def init(configFile):
     if config.debug:
         log.setLevel(logging.DEBUG)
     else:
-        log.setLevel(logging.INFO)       
-        
+        log.setLevel(logging.INFO)
+
 
     ## get a list of the plugins available
     availPlugins=[]
@@ -143,8 +143,8 @@ def init(configFile):
         ## set the 'lastupdate" variable to some long time ago
         ##  so that the system will be forced to update it now
         p['lastUpdate'] = dt.datetime.now()
-        p['lastStart']  = dt.datetime.now() - dt.timedelta(days=300) 
-        p['lastEnd']    = dt.datetime.now() - dt.timedelta(days=300) 
+        p['lastStart']  = dt.datetime.now() - dt.timedelta(days=300)
+        p['lastEnd']    = dt.datetime.now() - dt.timedelta(days=300)
         _getParams(p)
 
 
@@ -154,7 +154,7 @@ def init(configFile):
 
 
 def update():
- try:                           
+ try:
     global currentDisplays
 
     updates = {}
@@ -177,13 +177,13 @@ def update():
         # filter to have only enabled plugins available for given location
         avail = filter(
             lambda p: (loc.split('_')[0] in p['location'] and p['enabled']),
-            plugins )       
+            plugins )
 
         # filter out those already shown elsewhere, except for itself
         shownClasses = [p for p in filter(lambda p: p!=None, zip(*currentDisplays.items())[1])]
         avail = filter( lambda p: not p in shownClasses or p == cur, avail)
 
-        # if there is nothing to possibly show (this shouldn't happen in 
+        # if there is nothing to possibly show (this shouldn't happen in
         #  the production software), continue on to the next location
         if (len(avail) == 0 ):
             continue
@@ -203,12 +203,12 @@ def update():
 
         # set the display location to this new display if the previous one has expired
         # or if the new display is of a higher priority class
-        if ( cur == None or 
-             not cur['enabled'] or 
+        if ( cur == None or
+             not cur['enabled'] or
              next['priority'][0] > cur['priority'][0] or
              (dt.datetime.now()-cur['lastStart']) > cur['dispDuration'] ):
                 newDisp = next
-                      
+
         #update with the new page if we found one
         if newDisp:
             cn = getClassName(newDisp['script'])
@@ -224,13 +224,13 @@ def update():
               log.error(cn+":  error in calling getPage(), disabling plugin")
               newDisp['enabled']=False
 
-        #TODO, don't tell the c++ code to update if the page is the same and 
+        #TODO, don't tell the c++ code to update if the page is the same and
         # doesn't need refreshing
     return updates.items()
 
 
  except Exception as inst:
-     log.critical("Severe error with python update(), you probably killed the program, thanks alot.")
+     log.critical("Severe error with python update(), you probably killed the program, Thanks Obama.")
      log.critical(inst)
-     traceback.print_exc()    
+     traceback.print_exc()
      return '';
