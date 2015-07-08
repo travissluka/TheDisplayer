@@ -14,6 +14,7 @@ plugins = [
     'alerts',
     'spc',
     'imagery',
+    'nhc',
 ]
 
 
