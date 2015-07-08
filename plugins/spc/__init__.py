@@ -122,7 +122,8 @@ class SPC:
 <body>
   <div '''+slideshow+'''>''');
             for img in imgToShow:
-                html.write('<div class="slide"><h1>Severe Weather Outlook</h1><img src="{0}"/></div>'.format(img))
+                dayNum = img[3]
+                html.write('<div class="slide"><h1>Severe Weather Outlook  (Day {1})</h1><img src="{0}"/></div>'.format(img,dayNum))
             html.write('''
   </div>
 </body>
