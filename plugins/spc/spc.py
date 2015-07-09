@@ -18,6 +18,21 @@ import sys
 ## close enough and consider it in the shape
 deadzone = .05
 
+
+def getMesoDiscussions(office):
+    msd = []
+    
+    url = "http://www.spc.noaa.gov/products/spcmdrss.xml"
+    feed = feedparser.parse(url)
+    for f in feed['entries']:
+        res = re.search(r"^ATTN.+(LWX).+$",f['summary'], flags=re.MULTILINE)
+        if res:
+            msd.append(f)
+
+    return msd
+
+
+
 ## The following function gets the 3 day convective outlooks from the SPC
 ##  and for a given lat/lon, determines what the outlook levels are for that
 ##  location. Lat/Lon given as degrees N/W.

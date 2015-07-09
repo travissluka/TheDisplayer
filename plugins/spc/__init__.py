@@ -16,11 +16,14 @@ import datetime as dt
 import os
 import spc
 import urllib
+import re
+
 
 ## Configurables
 #########################
 
 location = (38.8967, 76.9275)   # College Park, MD
+office   = 'LWX'
 
 ## The categorical outlook levels in ascending order of severity are:
 ##   (TSTM, MRGL, SLGT, ENH, MDT, HIGH)
@@ -31,7 +34,7 @@ minLocOutlook = "TSTM"          # minimum level of convection probability
 minNatOutlook = "ENH"           # same as above, except for the whole nation
 
 
-dispTime = 6000                 # time (msec) to show each image in slideshow
+dispTime = 8000                 # time (msec) to show each image in slideshow
 
 
 #####################################################################
@@ -46,7 +49,9 @@ globalParams = {
     'location'    : 'half',
 }
 
-class SPC:
+
+        
+class Outlook:
     def getPage(self):
         return  'file://'+htmlpfx+'/spc_outlook.html'
 
@@ -88,6 +93,16 @@ class SPC:
         for img in imgToShow:
             dl = urllib.URLopener()
             dl.retrieve("http://www.spc.noaa.gov/products/outlook/"+img, htmlpfx+'/'+img)
+
+        ## also look at mesoscale discussions for our office location
+        msd = spc.getMesoDiscussions(office)
+        count = 10
+        for m in msd:
+            res = re.search(r'\<img.*src\=\"(.*?)\".*\>', m['description'])
+            if res:
+                filename = 'mes{0:02d}.gif'.format(count)
+                urllib.URLopener().retrieve(res.group(1),htmlpfx+'/'+filename)
+                imgToShow.append(filename)
         
         ## Create the html file to display
         with open(htmlpfx+'/spc_outlook.html','w') as html:
@@ -134,4 +149,4 @@ class SPC:
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [SPC]
+displays = [Outlook]
