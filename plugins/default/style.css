@@ -7,13 +7,13 @@ body {
 }
 
 h1, h2 {
-  font-family: 'Roboto Condensed';
+  font-family: 'Roboto Condensed'; /* Domo Arigato, Mr. Roboto */
   font-size: 45px;
   margin:0px;
 }
 h2 {
   font-size: 25px;
-  
+
 }
 
 .outer {
