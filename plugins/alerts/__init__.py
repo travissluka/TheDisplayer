@@ -169,7 +169,7 @@ class AlertText:
             desc = '<p>'+faInfo['description'].replace('\n','</br>')+'</p>'
             desc = desc.replace('*','</p><p>*')
             inst = faInfo['instruction']
-            desc = desc+'<p class="instructions">'+inst+'</p>'
+            desc = str(desc)+'<p class="instructions">'+str(inst)+'</p>'
             with open(htmlpfx+'/alerthalf.html','w') as html:
                 html.write('''
   <html><head>
