@@ -15,6 +15,7 @@ plugins = [
     'spc',
     'imagery',
     'nhc',
+    'current',
 ]
 
 
