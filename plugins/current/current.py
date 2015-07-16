@@ -15,7 +15,7 @@ def getCSSwxbug():
 
     response = requests.get(url,verify=False)
     data = response.json()
-    iconsize = '500x420'  # see http://weather.weatherbug.com/corporate/products/API/help.aspx for details
+    iconsize = '400x336'  # see http://weather.weatherbug.com/corporate/products/API/help.aspx for details
 
     ## get data from JSON query
     mslp = data[0]['MSLP'] # millibars
@@ -40,28 +40,38 @@ def getCSSwxbug():
         html.write('''
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="../common/style.css">
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<div id="Title">
-Current Conditions:
-</div>
-<div id="Temperature">
-'''+str(temp)+'''F
-</div>
-<div id="DewPt">
-'''+str(dew)+'''F
-</div>
-<div id="RH">
-'''+str(rh)+'''%
-</div>
-<div id="WindSpeed">
-'''+str(wspd)+'''MPH
-</div>
-<div id="WindDir">
-'''+str(wdir)+'''Degrees
-</div>
-<div id="ForecastIcon">
-<img src="http://img.weather.weatherbug.com/forecast/icons/localized/'''+iconsize+'''/en/trans/cond'''+iconstr+'''.png"/>
+<div id="InfoBox">
+    <div id="Title">
+        Computer and Space Sciences Building - University of Maryland
+    </div>
+    <div id="SubBox1">
+        <div id="SubBox1left">
+            <div id="ForecastIcon">
+                <img src="http://img.weather.weatherbug.com/forecast/icons/localized/'''+iconsize+'''/en/trans/cond'''+iconstr+'''.png"/>
+            </div>
+        </div>
+        <div id="SubBox1right">
+            <div id="Temperature">
+                '''+str(int(round(temp,0)))+'''&deg;F
+            </div>
+            <div id="DewPt">
+                '''+str(int(round(dew,0)))+'''&deg;F Dew
+            </div>
+            <div id="RH">
+                '''+str(rh)+'''% RH
+            </div>
+        </div>
+    </div>
+    <div id="Wind">
+        Wind from '''+str(wdir)+'''&deg; at '''+str(int(round(wspd,0)))+''' MPH
+    </div>
+    <div id="Timestamp">
+        Last updated: '''+str(time)+''' UTC
+    </div>
 </div>
 </body>
 </html>

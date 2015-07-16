@@ -1,0 +1,55 @@
+body {
+    background-image: url("background.png");
+}
+
+#InfoBox {
+    background-color: rgba(255, 255, 255, 0.4);
+    width: 713px;
+    height: 650px;
+    margin-left: 50px;
+    margin-top: 250px;
+}
+
+#SubBox1 {
+  width: 713px;
+}
+
+#SubBox1left {
+  width: 440px;
+  height: 350px;
+  float: left;
+}
+
+#SubBox1right {
+  width: 273px;
+  height: 350px;
+  margin-left: 440px;
+}
+
+#Title {
+  padding: 15px;
+  font-size: 40px;
+}
+
+#Timestamp {
+  font-size: 28px;
+  padding-left: 15px;
+  padding-bottom: 15px;
+}
+
+#Temperature {
+  font-size: 90px;
+}
+
+#DewPt {
+  font-size: 50px;
+}
+
+#RH {
+  font-size: 50px;
+}
+
+#Wind {
+  padding-left: 15px;
+  font-size: 50px;
+}
