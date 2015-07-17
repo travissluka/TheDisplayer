@@ -16,7 +16,7 @@ import sys
 
 ## the distance from the shape boundary at which we say the point is
 ## close enough and consider it in the shape
-deadzone = .05
+deadzone = 0
 
 
 def getMesoDiscussions(office):
@@ -133,9 +133,20 @@ def getOutlooksForLoc(center=None):
                 x2 = (center[1] - coords[idx-1][1])
                 cp = (x1*y2)-(x2*y1)
 
+                ## test the line segment after it as well (otherwise could get a false positive)
+                cp2 = 100
+                if idx < len(coords)-1:
+                    idx += 1
+                    y1 = (coords[idx][0] - coords[idx-1][0])
+                    x1 = (coords[idx][1] - coords[idx-1][1])
+                    y2 = (center[0] - coords[idx-1][0])
+                    x2 = (center[1] - coords[idx-1][1])
+                    cp2 = (x1*y2)-(x2*y1)
+                    
+                             
                 ## if cross product is negative (to the right of the line segment)
                 ## or we are really close to the line, mark us as inside this segment
-                if distance < deadzone or cp > 0:
+                if distance < deadzone or (cp > 0 and cp2 > 0):
                     shapesIn.append(s[0])
             else:
                 ## If no coordinate was passed into this function, just get a
