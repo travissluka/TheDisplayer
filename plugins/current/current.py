@@ -30,7 +30,7 @@ def getCSSwxbug():
     wetbulb = float(wetbulb) * (9./5.) + 32. # convert to Fahrenheit
     hourrain = data[0]['HourlyRainRate'] # mm
     wspd = data[0]['WindSpeed'] # m/s
-    wspd = float(wspd) * 2.24 # miles per hour
+    wspd = float(wspd) * 0.621371 # miles per hour
     wdir = data[0]['WindDirection'] # degrees
     ### TODO: add algorithm to determine degrees -> NW/W/etc.
     dailyrain = data[0]['DailyRain'] # mm
