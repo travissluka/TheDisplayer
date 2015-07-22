@@ -1,9 +1,36 @@
-
-body {
+html {
+    position:relative;
     overflow: hidden;
+    height: auto;
+    margin: 8px;
+    margin-bottom: 20px;
+
+}
+body{
+    position:relative;
+    height:auto;
+    margin:0px;
+}
+.wrapper{
+    display:table;
+    width:100%;
+    height:100%;
+}
+.header{
+    margin-top:10px;
+    position:relative;
+    display:table-row;
+    width:100%;
+    height:auto;
+}
+.content{
+    display:table-row;
+    height:100%;
+    width:100%;
 }
 
-h1 {
+
+.header h1 {
     background-color:#039;
     color:#FFF;
     text-align:center;

@@ -129,16 +129,12 @@ class Outlook:
         },  '''+str(dispTime)+''');
       });
     </script>
-    <style>
-      #slideshow > div {
-        position: absolute;}
-    </style>
  </head>
 <body>
-  <div '''+slideshow+'''>''');
+    <div '''+slideshow+''' >''');
             for img in imgToShow:
                 dayNum = img[3]
-                html.write('<div class="slide"><h1>Severe Weather Outlook  (Day {1})</h1><img src="{0}"/></div>'.format(img,dayNum))
+                html.write('<div class="slide wrapper"><div class="header"><h1>Severe Weather Outlook  (Day {1})</h1></div><div class="content"><img src="{0}"/></div></div>'.format(img,dayNum))
             html.write('''
   </div>
 </body>

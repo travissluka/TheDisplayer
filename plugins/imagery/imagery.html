@@ -14,20 +14,20 @@
           .show()
           .end()
           .appendTo('#slideshow');
-        },  5000);
+        },  15000);
       });
     </script>
-    <style>
-      #slideshow > div {
-        position: absolute;}
-    </style>
  </head>
   <body>
-    <h1>Satellite Imagery</h1>
-    <div id="slideshow">
-      <div class="slide"> <img src="vis.jpg"> </div>
-      <div class="slide"> <img src="wv.jpg"> </div>
-      <div class="slide"> <img src="rb.jpg"> </div>      
+    <div class="wrapper">
+      <div class="header">
+	<h1>Satellite Imagery</h1>
+      </div>
+      <div id="slideshow" class="content">
+	<div class="slide"> <img src="vis.gif"> </div>
+	<div class="slide"> <img src="wv.gif"> </div>
+	<div class="slide"> <img src="rb.gif"> </div>
+      </div>
     </div>
   </body>
 </html>

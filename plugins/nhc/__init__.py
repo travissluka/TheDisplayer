@@ -25,7 +25,7 @@ htmlpfx = os.path.abspath(os.path.dirname(__file__))
 globalParams = {
     'enabled'     : False,
     'updateFreq'  : dt.timedelta(minutes=30),
-    'dispDuration': dt.timedelta(seconds=45),
+    'dispDuration': dt.timedelta(seconds=90),
     'priority'    : (1,2.0),
     'location'    : 'half',
 }
@@ -71,8 +71,11 @@ class NHC:
                 dst = htmlpfx+'/AT{0}{1}.gif'.format(stormNum,t)
                 urllib.URLopener().retrieve(src,dst)
                 blocks.append('''
-<div class="slide">
-   <h1>'''+stormName+'''</h1><center><img src="'''+dst+'''"/></center>
+<div class="slide wrapper">
+  <div class="header"> <h1>'''+stormName+'''</h1></div>
+  <div class="content">
+    <img src="'''+dst+'''"/>
+  </div>
 </div>''')
 
 
@@ -97,10 +100,6 @@ class NHC:
         },  '''+str(dispTime)+''');
       });
     </script>
-    <style>
-      #slideshow > div {
-        position: absolute;}
-    </style>
   </head>
   <body>
   <div id="slideshow">'''+' '.join(blocks)+'''
