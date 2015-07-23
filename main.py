@@ -28,6 +28,8 @@ import importlib
 import re
 import datetime as dt
 import traceback
+import inspect
+import os
 
 
 log.info("TheDisplayer - Display server for AOSC hallway monitors ")
@@ -66,18 +68,25 @@ def getClassName(c):
 
 
 ################################################################################
-def _getParams(p):
+def updatePlugin(p):
     suppressMoreWarn = False
     cn = getClassName(p['script'])
+    cwd = os.getcwd()
+    
     try:
-        params = p['script'].getParams()
+        ## change the working directory to the plugin's directory        
+        os.chdir( os.path.dirname(inspect.getfile(p['script'].__class__)) )
+        params = p['script'].update()
         for k in params:
             p[k] = params[k]
     except:
-        log.error(cn+":  Failure in 'getParams()', disabling plugin")
+        log.error(cn+":  Failure in 'update()', disabling plugin")
         traceback.print_exc()
         suppressMoreWarn = True
 
+    ## change back to original working directory
+    os.chdir(cwd)
+    
     # make sure certain key parameters are set, if not fill them in
     #  with some default values to keep the system happy
     defaults = {
@@ -91,7 +100,7 @@ def _getParams(p):
             p[d] = defaults[d]
             if not suppressMoreWarn:
                 log.error(
-                    cn+': {0} not defined by getParams(), setting to default "{1}"'.format(d,str(p[d])))
+                    cn+': {0} not defined by update(), setting to default "{1}"'.format(d,str(p[d])))
 
 
 def init(configFile):
@@ -128,15 +137,18 @@ def init(configFile):
             log.error('Plugin: "{0}" specified in config is not available.'
               .format(cp))
         else:
-          try:
-            plugin     = importlib.import_module('plugins.'+cp)
-            newClasses = [{'script':p()} for p in plugin.displays]
-            for d in newClasses:
-                log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))
-            plugins += newClasses
-          except:
-            log.error('Cannot load plugin "{0}", disabling'.format(cp))
-            traceback.print_exc()
+            try:
+                ## save the current working directory in case the plugin messes with it
+                cwd = os.getcwd()
+                plugin     = importlib.import_module('plugins.'+cp)
+                newClasses = [{'script':p} for p in plugin.displays]
+                for d in newClasses:
+                    log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))
+                    plugins += newClasses
+            except:
+                log.error('Cannot load plugin "{0}", disabling'.format(cp))
+                traceback.print_exc()
+            os.chdir(cwd)
 
     ## initialize some of the fields for each display plugin
     for p in plugins:
@@ -145,7 +157,7 @@ def init(configFile):
         p['lastUpdate'] = dt.datetime.now()
         p['lastStart']  = dt.datetime.now() - dt.timedelta(days=300)
         p['lastEnd']    = dt.datetime.now() - dt.timedelta(days=300)
-        _getParams(p)
+        updatePlugin(p)
 
 
 ################################################################################
@@ -163,9 +175,9 @@ def update():
     for p in plugins:
         if (dt.datetime.now()-p['lastUpdate']) >= p['updateFreq']:
             cn = getClassName(p['script'])
-            log.debug("Calling getParams() for "+cn)
+            log.debug("Calling update() for "+cn)
             p['lastUpdate'] = dt.datetime.now()
-            _getParams(p)
+            updatePlugin(p)
 
     #find a plugin to show for each display location
     for loc in currentDisplays:
@@ -216,7 +228,7 @@ def update():
             newDisp['lastStart'] = dt.datetime.now()
             currentDisplays[loc] = newDisp
             try:
-              newPage = newDisp['script'].getPage()
+              newPage = newDisp['html']
               assert(type(newPage) == str)
               updates[loc] = newPage
               log.debug('Setting "{0}" to {1}'.format(loc,cn))

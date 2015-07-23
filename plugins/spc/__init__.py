@@ -7,13 +7,11 @@
 ## across the country, the appropriate maps will be shown for those days.
 ## Additionally, if our location has hail, tornado, wind probabilities, those
 ## maps are shown as well
-##
-## TODO: Still has some bugs, sometimes our locations is not correctly
-##   determined to be in the TSTM shape, other times it is when it should
-##   not be
 ################################################################################
+import displayplugin as dp
+
 import datetime as dt
-import os
+import os,shutil
 import spc
 import urllib
 import re
@@ -39,26 +37,20 @@ dispTime = 8000                 # time (msec) to show each image in slideshow
 
 #####################################################################
 
-htmlpfx = os.path.abspath(os.path.dirname(__file__))
-
-globalParams = {
-    'enabled'     : False,
-    'updateFreq'  : dt.timedelta(minutes=30),
-    'dispDuration': dt.timedelta(seconds=45),
-    'priority'    : (1,2.0),
-    'location'    : 'half',
-}
-
-
-        
+      
 class Outlook:
-    def getPage(self):
-        return  'file://'+htmlpfx+'/spc_outlook.html'
-
-
-    def getParams(self):
-        params =  globalParams
-
+    def update(self):
+        tmpdir = dp.gentmpdir()            
+        params = {
+            'enabled'     : False,
+            'updateFreq'  : dt.timedelta(minutes=30),
+            'dispDuration': dt.timedelta(seconds=45),
+            'priority'    : (1,2.0),
+            'location'    : 'half',
+            'html'        : 'file://'+tmpdir+'/spc_outlook.html'
+        }
+        shutil.copy('style.css',tmpdir)
+        
         ## determine which day outlooks we need to display
         allOutlooks = spc.getOutlooksForLoc()
         myOutlooks  = spc.getOutlooksForLoc(location)
@@ -92,7 +84,7 @@ class Outlook:
         ## download the images
         for img in imgToShow:
             dl = urllib.URLopener()
-            dl.retrieve("http://www.spc.noaa.gov/products/outlook/"+img, htmlpfx+'/'+img)
+            dl.retrieve("http://www.spc.noaa.gov/products/outlook/"+img, tmpdir+'/'+img)
 
         ## also look at mesoscale discussions for our office location
         msd = spc.getMesoDiscussions(office)
@@ -101,11 +93,11 @@ class Outlook:
             res = re.search(r'\<img.*src\=\"(.*?)\".*\>', m['description'])
             if res:
                 filename = 'mes{0:02d}.gif'.format(count)
-                urllib.URLopener().retrieve(res.group(1),htmlpfx+'/'+filename)
+                urllib.URLopener().retrieve(res.group(1),tmpdir+'/'+filename)
                 imgToShow.append(filename)
         
         ## Create the html file to display
-        with open(htmlpfx+'/spc_outlook.html','w') as html:
+        with open(tmpdir+'/spc_outlook.html','w') as html:
             slideshow = ""
             if len(imgToShow) > 1:
                 slideshow = 'id="slideshow"'
@@ -145,4 +137,4 @@ class Outlook:
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [Outlook]
+displays = [Outlook() ]

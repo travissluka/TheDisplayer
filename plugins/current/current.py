@@ -6,9 +6,8 @@
 
 ## NOTE: Requires the following Python modules:
 import requests, json, os
-htmlpfx = os.path.abspath(os.path.dirname(__file__))
 
-def getCSSwxbug():
+def getCSSwxbug(filename):
     ## NOTE: This url is on sense.umd.edu now , move it to a UMD Weather server once configured
     ## We should be archiving the weatherbug data somewhere more centralized/relevant
     url = 'http://sense.umd.edu/aether/api/wxbug_recent.php'
@@ -36,7 +35,7 @@ def getCSSwxbug():
     dailyrain = data[0]['DailyRain'] # mm
     rh = data[0]['RH'] # percentage
 
-    with open(htmlpfx+'/currently.html','w') as html:
+    with open(filename,'w') as html:
         html.write('''
 <html>
 <head>

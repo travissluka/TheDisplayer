@@ -10,6 +10,7 @@ pad_right  = 21
 pad_bottom = 39
 
 plugins = [
+    'common',
     'default',
     'alerts',
     'spc',

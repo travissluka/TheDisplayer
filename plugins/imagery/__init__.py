@@ -1,41 +1,50 @@
+import displayplugin as dp
+
 import datetime as dt
-import os
+import os, shutil
 import urllib
 from subprocess import call
 
-htmlpfx = os.path.abspath(os.path.dirname(__file__))
-
-globalParams = {
-    'enabled'     : True,
-    'updateFreq'  : dt.timedelta(minutes=20),
-    'dispDuration': dt.timedelta(seconds=60),
-    'priority'    : (1,1.0),
-    'location'    : 'half',
-}
 
 
 class Imagery:
-    def getParams(self):
-        args = '--loop -d 25 "#0--1" -d300 "#-1" --colors=256 -O2' # -O2 --dither  --colors=256'
-        params = globalParams.copy()
+    def update(self):
+        tmpdir = dp.gentmpdir()
+        
+        params = {
+            'enabled'     : True,
+            'updateFreq'  : dt.timedelta(minutes=20),
+            'dispDuration': dt.timedelta(seconds=60),
+            'priority'    : (1,1.0),
+            'location'    : 'half',
+            'html'        : 'file://'+tmpdir+"/imagery.html"
+        }
 
+        ## copy required files to the temporary directory
+        shutil.copy('style.css', tmpdir)
+        shutil.copy('imagery.html', tmpdir)
+
+        ## arguments to be used by "gifsicle" for altering the animated gifs
+        args = '--loop -d 25 "#0--1" -d300 "#-1" --colors=256 -O2'
+
+        ## visibile imagery
         filename="http://www.ssd.noaa.gov/goes/east/eaus/vis-animated.gif"
-        urllib.URLopener().retrieve(filename, htmlpfx+"/visa.gif")
-        call('gifsicle {0}/visa.gif {1} > {0}/vis.gif'.format(htmlpfx,args),shell=True)
+        urllib.URLopener().retrieve(filename, tmpdir+"/visa.gif")
+        call('gifsicle {0}/visa.gif {1} > {0}/vis.gif'.format(tmpdir,args),shell=True)
 
+        ## infrared imagery
         filename = "http://www.ssd.noaa.gov/goes/east/eaus/rb-animated.gif"
-        urllib.URLopener().retrieve(filename, htmlpfx+"/rba.gif")
-        call('gifsicle {0}/rba.gif {1} > {0}/rb.gif'.format(htmlpfx,args),shell=True)
+        urllib.URLopener().retrieve(filename, tmpdir+"/rba.gif")
+        call('gifsicle {0}/rba.gif {1} > {0}/rb.gif'.format(tmpdir,args),shell=True)
 
+        ## water vapor imagery
         filename = "http://www.ssd.noaa.gov/goes/east/eaus/wv-animated.gif"
-        urllib.URLopener().retrieve(filename, htmlpfx+"/wva.gif")
-        call('gifsicle {0}/wva.gif {1} > {0}/wv.gif'.format(htmlpfx,args),shell=True)
-        return params
+        urllib.URLopener().retrieve(filename, tmpdir+"/wva.gif")
+        call('gifsicle {0}/wva.gif {1} > {0}/wv.gif'.format(tmpdir,args),shell=True)
 
-    def getPage(self):
-        return  'file://'+htmlpfx+'/imagery.html'
+        return params
 
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [Imagery]
+displays = [Imagery()]

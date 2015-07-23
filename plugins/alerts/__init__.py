@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+import displayplugin as dp
+
 import feedparser
 import urllib2
 import xmltodict
 import datetime as dt
-import os
+import os, shutil
 import re
 
 #countycode='MDC510' # baltimore city
@@ -15,9 +16,6 @@ url='http://alerts.weather.gov/cap/wwaatmget.php?x='+countycode+'&y=0'
 mainAlert = None
 topAlerts = None
 severity = None
-
-htmlpfx = os.path.abspath(os.path.dirname(__file__))
-
 
 ################################################################################
 
@@ -93,19 +91,22 @@ def getAlerts():
 
     
 class Header:
-    def getParams(self):
+    def update(self):
+        tmpdir=dp.gentmpdir()
         global mainAlert, topAlerts, severity
         mainAlert, topAlerts, severity = getAlerts()
+        shutil.copy('style.css',tmpdir)
+        params = {
+            'enabled'      : mainAlert != None,
+            'updateFreq'   : dt.timedelta(minutes=1),
+            'dispDuration' : dt.timedelta(minutes=1),
+            'priority'     : (3,1.0),
+            'location'     : 'header',
+            'html'         : 'file://'+tmpdir+'/header.html'
+        }
         
-        params = {}
-        params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(minutes=1)
-        params['dispDuration'] = dt.timedelta(minutes=1)
-        params['priority']     = (3,1.0)
-        params['location']     = 'header'
-
         if mainAlert:
-            with open(htmlpfx+'/header.html','w') as html:
+            with open(tmpdir+'/header.html','w') as html:
                 html.write('''
   <html><head><link rel="stylesheet" type="text/css" href="style.css"></head>
   <body class="header severity'''+str(severity)+'''">
@@ -114,24 +115,29 @@ class Header:
   </html>'''.format(mainAlert['cap_event']))           
         return params
         
-    def getPage(self):
-        return 'file://'+htmlpfx+'/header.html'
 
 
 ################################################################################
 
     
 class Footer:
-    def getParams(self):
+    def update(self):
         global mainAlert, topAlerts       
-        params = {}
-        params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(minutes=1)
-        params['dispDuration'] = dt.timedelta(minutes=1)
-        params['priority']     = (3,1.0)
-        params['location']     = 'footer'
+
+        tmpdir=dp.gentmpdir()
+        shutil.copy('style.css',tmpdir)
+        
+        params = {
+            'enabled'      : mainAlert != None,
+            'updateFreq'   : dt.timedelta(minutes=1),
+            'dispDuration' : dt.timedelta(minutes=1),
+            'priority'     : (3,1.0),
+            'location'     : 'footer',
+            'html'         : 'file://'+tmpdir+'/footer.html'
+        }
+        
         if mainAlert:
-            with open(htmlpfx+'/footer.html','w') as html:
+            with open(tmpdir+'/footer.html','w') as html:
                 html.write('''
   <html><head><link rel="stylesheet" type="text/css" href="style.css"></head>
   <body class="footer severity'''+str(severity)+'''">
@@ -141,21 +147,26 @@ class Footer:
   </html>''')
         return params
     
-    def getPage(self):
-        return 'file://'+htmlpfx+'/footer.html'
-
 
 ################################################################################
 
     
 class AlertText:
-    def getParams(self):
-        params = {}
-        params['enabled']      = mainAlert != None
-        params['updateFreq']   = dt.timedelta(minutes=1)
-        params['dispDuration'] = dt.timedelta(minutes=1)
-        params['priority']     = (1,1.0)
-        params['location']     = 'half'
+    def update(self):
+        tmpdir = dp.gentmpdir()
+        shutil.copy('style.css',tmpdir)
+        shutil.copy('jscroller2-1.1.css', tmpdir)
+        shutil.copy('jscroller2-1.61.js', tmpdir)
+
+        params = {
+            'enabled'      : mainAlert != None,
+            'updateFreq'   : dt.timedelta(minutes=1),
+            'dispDuration' : dt.timedelta(minutes=1),
+            'priority'     : (1,1.0),
+            'location'     : 'half',
+            'html'         : 'file://'+tmpdir+'/alerthalf.html'
+        }
+        
         if severity > 0:
             params['priority']     = (3,1.0)
 
@@ -170,7 +181,7 @@ class AlertText:
             desc = desc.replace('*','</p><p>*')
             inst = faInfo['instruction']
             desc = str(desc)+'<p class="instructions">'+str(inst)+'</p>'
-            with open(htmlpfx+'/alerthalf.html','w') as html:
+            with open(tmpdir+'/alerthalf.html','w') as html:
                 html.write('''
   <html><head>
    <link rel="stylesheet" type="text/css" href="jscroller2-1.1.css">
@@ -187,13 +198,10 @@ class AlertText:
   </html>''')
         return params
 
-    def getPage(self):
-        return 'file://'+htmlpfx+'/alerthalf.html'
-
 
 ################################################################################    
     
 
 
-displays = [Header, Footer, AlertText]
+displays = [Header(), Footer(), AlertText() ]
     

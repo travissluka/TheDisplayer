@@ -4,9 +4,10 @@
 ## Reads the RSS feeds from the NHC and shows the appropriate graphics
 ##  if there are any storms in the Atlantic basin
 ################################################################################
+import displayplugin as dp
 
 import datetime as dt
-import os
+import os, shutil
 import urllib
 import urllib2
 import feedparser
@@ -22,13 +23,6 @@ dispTime = 15000
 
 htmlpfx = os.path.abspath(os.path.dirname(__file__))
 
-globalParams = {
-    'enabled'     : False,
-    'updateFreq'  : dt.timedelta(minutes=30),
-    'dispDuration': dt.timedelta(seconds=90),
-    'priority'    : (1,2.0),
-    'location'    : 'half',
-}
 
 rssUrl = 'http://www.nhc.noaa.gov/index-at.xml'
 #rssUrl = 'http://www.nhc.noaa.gov/rss_examples/index-at-20130605.xml' ## testing feed
@@ -36,13 +30,18 @@ stormGraphics = "http://www.nhc.noaa.gov/storm_graphics"
 
 
 class NHC:
-    
-    def getPage(self):
-        return  'file://'+htmlpfx+'/nhc.html'
-
-
-    def getParams(self):
-        params =  globalParams
+    def update(self):
+        tmpdir = dp.gentmpdir()
+        params = {
+            'enabled'     : False,
+            'updateFreq'  : dt.timedelta(minutes=30),
+            'dispDuration': dt.timedelta(seconds=90),
+            'priority'    : (1,2.0),
+            'location'    : 'half',
+            'html'        : 'file://'+tmpdir+'/nhc.html'
+        }
+        shutil.copy('style.css',tmpdir)
+        
         activeStorms = []
         
         feed = xmltodict.parse(urllib2.urlopen(rssUrl).read())
@@ -68,7 +67,7 @@ class NHC:
                 
             for t in plots:
                 src = stormGraphics+'/AT{0}/AL{0}{1}{2}.gif'.format(stormNum,yr,t)
-                dst = htmlpfx+'/AT{0}{1}.gif'.format(stormNum,t)
+                dst = tmpdir+'/AT{0}{1}.gif'.format(stormNum,t)
                 urllib.URLopener().retrieve(src,dst)
                 blocks.append('''
 <div class="slide wrapper">
@@ -80,7 +79,7 @@ class NHC:
 
 
         ## write out the final html file
-        with open(htmlpfx+'/nhc.html','w') as html:
+        with open(tmpdir+'/nhc.html','w') as html:
             html.write('''
 <html>
   <head>
@@ -111,4 +110,4 @@ class NHC:
         return params
 
 
-displays = [NHC]
+displays = [NHC() ]
