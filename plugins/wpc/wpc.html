@@ -1,0 +1,52 @@
+
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../common/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="../common/jquery.min.js"></script>
+    <script>
+      $(function() {
+        $("#slideshow > div:gt(0)").hide();
+        setInterval(function() {
+          $('#slideshow > div:first')
+           .hide()
+          .next()
+          .show()
+          .end()
+          .appendTo('#slideshow');
+        },  15000);
+      });
+    </script>
+ </head>
+  <body>
+    <div id="slideshow">
+      <div class="slide wrapper">
+	<div class="header">
+	  <h1>Forecast (Day 1)</h1>
+	</div>
+	<div class="content">
+	  <img src="day1.gif">
+	</div>
+      </div>
+      
+      <div class="slide wrapper">
+	<div class="header">
+	  <h1>Forecast (Day 2)</h1>
+	</div>
+	<div class="content">
+	  <img src="day2.gif">
+	</div>
+      </div>
+      
+      <div class="slide wrapper">
+	<div class="header">
+	  <h1>Forecast (Day 3)</h1>
+	</div>
+	<div class="content">
+	  <img src="day3.gif">
+	</div>
+      </div>
+    </div>
+    
+  </body>
+</html>
