@@ -12,6 +12,7 @@ pad_bottom = 39
 plugins = [
     'common',
     'default',
+    'messages',
     'alerts',
     'spc',
     'imagery',

@@ -10,17 +10,29 @@
 
 ## Configure the system logging
 import logging
-logging.basicConfig(format='%(asctime)-13s [%(levelname)s] %(message)s')
+import logging.handlers
+import sys
+
 log = logging.getLogger('')
+logFormat = logging.Formatter('[%(asctime)-13s %(levelname)-5s] %(message)s')
+logFile   = logging.handlers.TimedRotatingFileHandler('display.log', when='d', backupCount=14)
+logScreen = logging.StreamHandler(sys.stdout)
+log.addHandler(logFile)
+log.addHandler(logScreen)
+logFile.setFormatter(logFormat)
+logScreen.setFormatter(logFormat)
+log.setLevel(logging.DEBUG)
+logScreen.setLevel(logging.DEBUG)
+logFile.setLevel(logging.DEBUG)
 logging.addLevelName(logging.INFO, "\033[01;37mINFO \033[00m")
 logging.addLevelName(logging.ERROR, "\033[01;31mERROR\033[00m")
 logging.addLevelName(logging.WARN, "\033[01;33mWARN \033[00m")
 logging.addLevelName(logging.CRITICAL, "\033[01;35mCRIT \033[00m")
-## TODO, make this a rotating log file
-#log.addHandler(logging.FileHandler('display.log'))
+log.info('')
+log.info("TheDisplayer, 2015, Travis Sluka & Cory Martin.")
+log.info('')
 
 ##############################
-
 
 from glob import glob
 import sys
