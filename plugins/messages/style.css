@@ -1,0 +1,44 @@
+body {
+  overflow: hidden;
+  padding:0px;
+  margin:0px;
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+h1, h2 {
+  font-family: 'Roboto Condensed'; /* Domo Arigato, Mr. Roboto */
+  font-size: 45px;
+  margin:0px;
+}
+h2 {
+  font-size: 25px;
+
+}
+
+.outer {
+ display: table;
+ position: relative;
+ height:100%;
+ width: 100%;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.inner {
+    margin-left:auto;
+    margin-right:auto;
+    width: 900px;
+    text-align:center;
+}
+
+
+.info {
+    margin-left:75px;
+    width: 750px;
+    font-size:30px;
+    color:#770000;
+}
