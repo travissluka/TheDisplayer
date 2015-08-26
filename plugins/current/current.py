@@ -28,10 +28,35 @@ def getCSSwxbug(filename):
     wetbulb = data[0]['WetBulb'] # celsius
     wetbulb = float(wetbulb) * (9./5.) + 32. # convert to Fahrenheit
     hourrain = data[0]['HourlyRainRate'] # mm
-    wspd = data[0]['WindSpeed'] # m/s
-    wspd = float(wspd) * 0.621371 # miles per hour
-    wdir = data[0]['WindDirection'] # degrees
-    ### TODO: add algorithm to determine degrees -> NW/W/etc.
+    wspd = float(data[0]['WindSpeed']) * 0.621371 # m/s to mph
+
+    ## convert wind degrees to direction
+    wdir = data[0]['WindDirection'] # degrees   
+    windCuttoffs = [
+        ('N',   11.25),
+        ('NNE', 33.75),
+        ('NE',  56.25),
+        ('ENE', 78.75),
+        ('E',   101.25),
+        ('ESE', 123.75),
+        ('SE',  146.25),
+        ('SSE', 168.75),
+        ('S',   191.25),
+        ('SSW', 213.75),
+        ('SW',  236.25),
+        ('WSW', 258.75),
+        ('W',   281.25),
+        ('WNW', 303.75),
+        ('NW',  326.25),
+        ('NNW', 348.75),
+        ('N',   360.0),        
+    ]        
+    for w in windCuttoffs:
+        if float(wdir) < w[1]:
+            print "got it!"
+            wdir = w[0]
+            break
+
     dailyrain = data[0]['DailyRain'] # mm
     rh = data[0]['RH'] # percentage
 
@@ -66,7 +91,7 @@ def getCSSwxbug(filename):
         </div>
     </div>
     <div id="Wind">
-        Wind from '''+str(wdir)+'''&deg; at '''+str(int(round(wspd,0)))+''' MPH
+        Wind from '''+str(wdir)+''' at '''+str(int(round(wspd,0)))+''' MPH
     </div>
     <div id="Timestamp">
         Last updated: '''+str(time)+''' UTC
