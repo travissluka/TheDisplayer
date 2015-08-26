@@ -6,7 +6,20 @@
 
 ## NOTE: Requires the following Python modules:
 import requests, json, os
+import urllib
 
+iconsize = '400x336'  # see http://weather.weatherbug.com/corporate/products/API/help.aspx for details
+
+
+def downloadIcons(outDir, size=iconsize):
+    ## downloads the weatherbug icons
+    ## get files condXXX.png where XXX is from 001 to 176, and 999
+    for i in ['{0:03d}'.format(n) for n in  [999,]+range(1,177)]:
+        filename='cond{0}.png'.format(i)
+        filepath='http://img2.weather.weatherbug.com/forecast/icons/localized/400x336/en/trans/'
+        urllib.URLopener().retrieve(filepath+filename, outDir+'/'+filename)
+        
+            
 def getCSSwxbug(filename):
     ## NOTE: This url is on sense.umd.edu now , move it to a UMD Weather server once configured
     ## We should be archiving the weatherbug data somewhere more centralized/relevant
@@ -14,7 +27,6 @@ def getCSSwxbug(filename):
 
     response = requests.get(url,verify=False)
     data = response.json()
-    iconsize = '400x336'  # see http://weather.weatherbug.com/corporate/products/API/help.aspx for details
 
     ## get data from JSON query
     mslp = data[0]['MSLP'] # millibars
@@ -53,7 +65,6 @@ def getCSSwxbug(filename):
     ]        
     for w in windCuttoffs:
         if float(wdir) < w[1]:
-            print "got it!"
             wdir = w[0]
             break
 
@@ -75,7 +86,7 @@ def getCSSwxbug(filename):
     <div id="SubBox1">
         <div id="SubBox1left">
             <div id="ForecastIcon">
-                <img src="http://img.weather.weatherbug.com/forecast/icons/localized/'''+iconsize+'''/en/trans/cond'''+iconstr+'''.png"/>
+                <img src="cond'''+iconstr+'''.png"/>
             </div>
         </div>
         <div id="SubBox1right">

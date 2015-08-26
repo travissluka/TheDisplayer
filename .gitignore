@@ -4,3 +4,4 @@ display
 moc_*
 *.pyc
 *~
+*.log*

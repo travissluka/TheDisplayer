@@ -5,9 +5,16 @@ import os, shutil
 import urllib
 import current
 
+import logging
+log = logging.getLogger(__name__)
+
+
 
 
 class CSSWxBugDisplay:
+    def __init__(self):
+        self.initialized = False
+        
     def update(self):
 
         tmpdir = dp.gentmpdir()        
@@ -27,6 +34,13 @@ class CSSWxBugDisplay:
         ## link the other required files to the tmp directory
         shutil.copy('style.css', tmpdir)
         shutil.copy('background.png', tmpdir)
+
+        ##download the icons if we haven't already
+        if not self.initialized:
+            log.debug('downloading WxBug icons...')
+            current.downloadIcons(tmpdir)
+            self.initialized = True
+            log.debug('donw downloading WxBug icons')
         
         return params
 
