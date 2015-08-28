@@ -12,8 +12,8 @@ class Info:
         params = {
             'enabled'     : True,
             'updateFreq'  : dt.timedelta(hours=24),
-            'dispDuration': dt.timedelta(seconds=30),
-            'priority'    : (1,0.2),
+            'dispDuration': dt.timedelta(seconds=15),
+            'priority'    : (1,0.05),
             'location'    : 'half',
             'html'        : "file://"+os.getcwd()+'/info.html'}
         return params

@@ -18,9 +18,7 @@ def gentmpdir():
     else:
         caller = str(callingclass.__class__)
     dirname =  tmpbasedir +"/"+caller
-    if os.path.exists(dirname):
-        shutil.rmtree(dirname)
-        
-    os.makedirs(dirname)
+    if not os.path.exists(dirname):        
+        os.makedirs(dirname)
     return dirname
     

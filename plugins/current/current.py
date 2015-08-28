@@ -7,6 +7,7 @@
 ## NOTE: Requires the following Python modules:
 import requests, json, os
 import urllib
+import os
 
 iconsize = '400x336'  # see http://weather.weatherbug.com/corporate/products/API/help.aspx for details
 
@@ -16,6 +17,10 @@ def downloadIcons(outDir, size=iconsize):
     ## get files condXXX.png where XXX is from 001 to 176, and 999
     for i in ['{0:03d}'.format(n) for n in  [999,]+range(1,177)]:
         filename='cond{0}.png'.format(i)
+        ##  skip if the file already exists
+        if os.path.exists(outDir+'/'+filename):
+            continue
+
         filepath='http://img2.weather.weatherbug.com/forecast/icons/localized/400x336/en/trans/'
         urllib.URLopener().retrieve(filepath+filename, outDir+'/'+filename)
         
