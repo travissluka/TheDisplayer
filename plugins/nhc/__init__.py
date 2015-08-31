@@ -56,8 +56,9 @@ class NHC:
         blocks = []
         yr = str(dt.datetime.now().year)[2:]
         for s in activeStorms:
-            stormNum = '{0:02d}'.format(int(s['nhc:wallet'][2:]))
+            stormNum = '{0:02d}'.format(int(s['nhc:atcf'][2:4]))
             stormName = (s['nhc:type']+' '+s['nhc:name']).title()
+
             ## plot the 5 day warning cones
             plots = ['W5']
             ## only if the wind speed is > tropical storm, plot the wind speed probabilities
