@@ -126,6 +126,8 @@ class Footer:
 
         tmpdir=dp.gentmpdir()
         shutil.copy('style.css',tmpdir)
+        shutil.copy('jscroller2-1.1.css', tmpdir)
+        shutil.copy('jscroller2-1.61.js', tmpdir)
         
         params = {
             'enabled'      : mainAlert != None,
@@ -137,12 +139,25 @@ class Footer:
         }
         
         if mainAlert:
+            xmldata = urllib2.urlopen(mainAlert['link']).read()
+            fullAlert =  xmltodict.parse(xmldata)
+            faInfo = fullAlert['alert']['info']
+            desc = faInfo['description'].replace('\n','     ')
+#            inst = faInfo['instruction']
+#            desc = str(desc)+'<p class="instructions">'+str(inst)+'</p>'
+            
             with open(tmpdir+'/footer.html','w') as html:
                 html.write('''
-  <html><head><link rel="stylesheet" type="text/css" href="style.css"></head>
+  <html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="jscroller2-1.1.css">
+  </head>
   <body class="footer severity'''+str(severity)+'''">
       <div class="mainAlert">'''+mainAlert['cap_event']+'''</div>
-      <div class="topAlerts">'''+','.join(topAlerts)+''' </div>
+      <div class="scrollbottom">
+<marquee behavior="scroll" direction="left" scrollamount=3>'''+desc+'''</marquee>
+</div>
   </body>
   </html>''')
         return params
@@ -203,5 +218,4 @@ class AlertText:
     
 
 
-displays = [Header(), Footer(), AlertText() ]
-    
+displays = [Header(), Footer()]

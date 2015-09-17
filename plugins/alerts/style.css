@@ -42,7 +42,12 @@
     height:90%;
     top:40px;
     position:relative;
-    overflow:hidden;
+    overflow:auto;
+}
+
+.scrollbottom{
+    margin-top:20px;
+    font-weight:bold;
 }
 
 .summary {
