@@ -97,7 +97,7 @@ class Header:
         mainAlert, topAlerts, severity = getAlerts()
         shutil.copy('style.css',tmpdir)
         params = {
-            'enabled'      : mainAlert != None,
+            'enabled'      : mainAlert != None  and severity > 0,
             'updateFreq'   : dt.timedelta(minutes=1),
             'dispDuration' : dt.timedelta(minutes=1),
             'priority'     : (3,1.0),
