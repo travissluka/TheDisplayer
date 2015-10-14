@@ -58,3 +58,16 @@ h2 {
 #clock_date{
     font-size:30px;
 }
+
+
+.ip1 {
+    position: absolute;
+    color:#DDD;
+    bottom:20px;
+}
+.ip2 {
+    position: absolute;
+    color:#DDD;
+    bottom:20px;
+    right:0px;
+}
