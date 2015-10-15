@@ -39,7 +39,6 @@ import sys
 import importlib
 import re
 import datetime as dt
-import traceback
 import inspect
 import os
 
@@ -92,8 +91,7 @@ def updatePlugin(p):
         for k in params:
             p[k] = params[k]
     except:
-        log.error(cn+":  Failure in 'update()', disabling plugin")
-        traceback.print_exc()
+        log.error(cn+":  Failure in update().  "+str(sys.exc_info()))
         suppressMoreWarn = True
 
     ## change back to original working directory
@@ -159,7 +157,7 @@ def init(configFile):
                     plugins += newClasses
             except:
                 log.error('Cannot load plugin "{0}", disabling'.format(cp))
-                traceback.print_exc()
+                log.error(' Reason:  ' + str(sys.exc_info()))
             os.chdir(cwd)
 
     ## initialize some of the fields for each display plugin
@@ -256,5 +254,5 @@ def update():
  except Exception as inst:
      log.critical("Severe error with python update(), you probably killed the program, Thanks Obama.")
      log.critical(inst)
-     traceback.print_exc()
+     log.critical(str(sys.exc_info()))
      return '';

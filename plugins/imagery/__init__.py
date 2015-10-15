@@ -32,21 +32,21 @@ class Imagery:
         urllib.URLopener().retrieve(filename, tmpdir+"/visa.gif")
         call('gifsicle {0}/visa.gif {1} > {0}/vis.gif'.format(tmpdir,args),shell=True)
         if not os.path.exists(tmpdir+'/vis.gif'):
-            raise Exception
+            raise Exception("vis.gif file was not found during update")
 
         ## infrared imagery
         filename = "http://www.ssd.noaa.gov/goes/east/eaus/rb-animated.gif"
         urllib.URLopener().retrieve(filename, tmpdir+"/rba.gif")
         call('gifsicle {0}/rba.gif {1} > {0}/rb.gif'.format(tmpdir,args),shell=True)
         if not os.path.exists(tmpdir+'/rb.gif'):
-            raise Exception
+            raise Exception("rb.gif file was not found during update")
 
         ## water vapor imagery
         filename = "http://www.ssd.noaa.gov/goes/east/eaus/wv-animated.gif"
         urllib.URLopener().retrieve(filename, tmpdir+"/wva.gif")
         call('gifsicle {0}/wva.gif {1} > {0}/wv.gif'.format(tmpdir,args),shell=True)
         if not os.path.exists(tmpdir+'/wva.gif'):
-            raise Exception
+            raise Exception("wva.gif file was not found during update")
 
         return params
 
