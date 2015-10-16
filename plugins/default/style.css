@@ -60,14 +60,22 @@ h2 {
 }
 
 
-.ip1 {
+.ip{
     position: absolute;
     color:#DDD;
-    bottom:20px;
+}
+    
+.ip1 {
+    top:0px;
 }
 .ip2 {
-    position: absolute;
-    color:#DDD;
+    top:0px;
+    right:0px;
+}
+.ip3 {
+    bottom:20px;
+}
+.ip4 {
     bottom:20px;
     right:0px;
 }

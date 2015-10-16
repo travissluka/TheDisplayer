@@ -25,10 +25,29 @@ def get_ip_address():
             
 class Header:
     def update(self):
+        tmpdir = dp.gentmpdir()       
+        params = {}
         params = lowPriorityParams
         params['location']      = 'header'
-        params['html']          = "file://"+os.getcwd()+'/header.html'
+        params['html']          = "file://"+tmpdir+'/header.html'
+
+        ## get the current IP address, and insert
+        ## the last 2 numbers into the HTML file
+        addr = get_ip_address().split('.')
+        ip1=addr[0]
+        ip2=addr[1]
+        with open("header.html",'r') as fin:
+            with open(tmpdir+"/header.html",'w') as fout:
+                for line in fin:
+                    line=line.replace("#IP1#",ip1)
+                    line=line.replace("#IP2#",ip2)
+                    fout.write(line)
+        ## copy other files needed
+        shutil.copy('style.css',tmpdir)
+        shutil.copy('aosc_logo.png',tmpdir)
+        
         return params
+    
 
 
     
@@ -44,13 +63,13 @@ class Footer:
         ## get the current IP address, and insert
         ## the last 2 numbers into the HTML file
         addr = get_ip_address().split('.')
-        ip1=addr[2]
-        ip2=addr[3]
+        ip3=addr[2]
+        ip4=addr[3]
         with open("footer.html",'r') as fin:
             with open(tmpdir+"/footer.html",'w') as fout:
                 for line in fin:
-                    line=line.replace("#IP1#",ip1)
-                    line=line.replace("#IP2#",ip2)                    
+                    line=line.replace("#IP3#",ip3)
+                    line=line.replace("#IP4#",ip4)
                     fout.write(line)
         ## copy other files needed
         shutil.copy('style.css',tmpdir)
