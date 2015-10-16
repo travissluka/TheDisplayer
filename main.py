@@ -164,10 +164,10 @@ def init(configFile):
     for p in plugins:
         ## set the 'lastupdate" variable to some long time ago
         ##  so that the system will be forced to update it now
-        p['lastUpdate'] = dt.datetime.now()
         p['lastStart']  = dt.datetime.now() - dt.timedelta(days=300)
-        p['lastEnd']    = dt.datetime.now() - dt.timedelta(days=300)
-        updatePlugin(p)
+        p['lastEnd']    = p['lastStart']
+        p['lastUpdate'] = p['lastStart']
+        p['updateFreq'] = dt.timedelta(minutes=1)
 
 
 ################################################################################
