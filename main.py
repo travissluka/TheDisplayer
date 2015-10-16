@@ -92,6 +92,7 @@ def updatePlugin(p):
             p[k] = params[k]
     except:
         log.error(cn+":  Failure in update().  "+str(sys.exc_info()))
+        p['enabled'] = False
         suppressMoreWarn = True
 
     ## change back to original working directory
@@ -208,6 +209,7 @@ def update():
         # if there is nothing to possibly show (this shouldn't happen in
         #  the production software), continue on to the next location
         if (len(avail) == 0 ):
+            log.warn("There is nothing to show for "+loc)
             continue
 
         # select highest priority classes
