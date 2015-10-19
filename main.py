@@ -14,7 +14,7 @@ import logging.handlers
 import sys
 
 log = logging.getLogger('')
-logFormat = logging.Formatter('[%(asctime)-13s %(levelname)-5s] %(message)s')
+logFormat = logging.Formatter('[%(asctime)-13s %(levelname)-5s] (%(name)s) %(message)s', datefmt='%Y-%m-%d %I:%M:%S')
 logFile   = logging.handlers.TimedRotatingFileHandler('display.log', when='d', backupCount=14)
 logScreen = logging.StreamHandler(sys.stdout)
 log.addHandler(logFile)
@@ -24,6 +24,7 @@ logScreen.setFormatter(logFormat)
 log.setLevel(logging.DEBUG)
 logScreen.setLevel(logging.DEBUG)
 logFile.setLevel(logging.DEBUG)
+logging.addLevelName(logging.DEBUG, "DEBUG ")
 logging.addLevelName(logging.INFO, "\033[01;37mINFO \033[00m")
 logging.addLevelName(logging.ERROR, "\033[01;31mERROR\033[00m")
 logging.addLevelName(logging.WARN, "\033[01;33mWARN \033[00m")
