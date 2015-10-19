@@ -12,6 +12,7 @@
 import logging
 import logging.handlers
 import sys
+import traceback
 
 log = logging.getLogger('')
 logFormat = logging.Formatter('[%(asctime)-13s %(levelname)-5s] (%(name)s) %(message)s', datefmt='%Y-%m-%d %I:%M:%S')
@@ -92,7 +93,8 @@ def updatePlugin(p):
         for k in params:
             p[k] = params[k]
     except:
-        log.error(cn+":  Failure in update().  "+str(sys.exc_info()))
+        err=traceback.format_exc(sys.exc_info())
+        log.error(cn+":  Failure in update().\n"+err)
         p['enabled'] = False
         suppressMoreWarn = True
 
@@ -158,8 +160,8 @@ def init(configFile):
                     log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))
                     plugins += newClasses
             except:
-                log.error('Cannot load plugin "{0}", disabling'.format(cp))
-                log.error(' Reason:  ' + str(sys.exc_info()))
+                err=traceback.format_exc(sys.exc_info())                                
+                log.error('Cannot load plugin "{0}", disabling.\n'.format(cp)+err)
             os.chdir(cwd)
 
     ## initialize some of the fields for each display plugin
@@ -255,7 +257,6 @@ def update():
 
 
  except Exception as inst:
-     log.critical("Severe error with python update(), you probably killed the program, Thanks Obama.")
-     log.critical(inst)
-     log.critical(str(sys.exc_info()))
+     err=traceback.format_exc(sys.exc_info())    
+     log.critical("Severe error with python update(), you probably killed the program.\n"+err)
      return '';
