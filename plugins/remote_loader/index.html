@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../common/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="../common/jquery.min.js"></script>
+    <script>
+      $(function() {
+        $("#slideshow > div:gt(0)").hide();
+        setInterval(function() {
+          $('#slideshow > div:first')
+           .hide()
+          .next()
+          .show()
+          .end()
+          .appendTo('#slideshow');
+        },  ##SLIDEDURATION##000);
+      });
+    </script>
+    <style>
+      #slideshow > div {
+        position: absolute;}
+    </style>
+ </head>
+<body>
+  <div id="##ID##" >
+    ##SLIDES##
+  </div>
+</body>
+</html>

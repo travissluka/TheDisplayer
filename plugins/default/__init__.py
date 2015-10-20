@@ -94,4 +94,5 @@ class Half:
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
 #displays = [Header, Footer, Half, Half]
-displays = [Header(), Footer(), Half(), Half()]
+def init():
+    return [Header(), Footer(), Half(), Half()]

@@ -26,7 +26,7 @@ h2 {
 .middle {
   display: table-cell;
   vertical-align: middle;
-  border-bottom: 3px solid #555;
+#  border-bottom: 3px solid #555;
 }
 
 .inner {

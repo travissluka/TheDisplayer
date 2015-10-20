@@ -10,4 +10,6 @@ dirname = dp.gentmpdir()
 shutil.copy('jquery.min.js', dirname)
 shutil.copy('style.css', dirname)
 
-displays = []        
+def init():
+    ## this plugin doesn't generate any displays
+    return []

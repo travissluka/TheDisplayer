@@ -217,5 +217,5 @@ class AlertText:
 ################################################################################    
     
 
-
-displays = [Header(), Footer()]
+def init():
+    return [Header(), Footer()]

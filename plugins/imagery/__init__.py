@@ -53,4 +53,5 @@ class Imagery:
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [Imagery()]
+def init():
+    return  [Imagery()]

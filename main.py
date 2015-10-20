@@ -155,7 +155,7 @@ def init(configFile):
                 ## save the current working directory in case the plugin messes with it
                 cwd = os.getcwd()
                 plugin     = importlib.import_module('plugins.'+cp)
-                newClasses = [{'script':p} for p in plugin.displays]
+                newClasses = [{'script':p} for p in plugin.init()]
                 for d in newClasses:
                     log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))
                     plugins += newClasses

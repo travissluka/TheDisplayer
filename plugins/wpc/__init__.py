@@ -38,4 +38,5 @@ class WPCForecast:
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [WPCForecast()]
+def init():
+    return [WPCForecast()]

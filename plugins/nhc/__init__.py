@@ -110,5 +110,5 @@ class NHC:
 
         return params
 
-
-displays = [NHC() ]
+def init():
+    return [ NHC() ]

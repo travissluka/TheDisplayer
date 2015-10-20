@@ -12,13 +12,15 @@ pad_bottom = 39
 plugins = [
     'common',
     'default',
-    'messages',
-    'alerts',
-    'spc',
-    'imagery',
-    'nhc',
-    'wpc',
-    'current',
+    
+    'alerts',         ## NWS alert for specific location
+#    'current',       ## realtime weatherbug data
+    'imagery',        ## satellite imagery
+#    'messages',    
+    'nhc',            ## Hurricane charts for the atlantic
+    'remote_loader',  ## remotely defined slideshow images
+    'spc',            ## Storm prediction center outlooks
+    'wpc',            ## weather prediction center synoptic charts
 ]
 
 

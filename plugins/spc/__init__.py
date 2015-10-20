@@ -137,4 +137,5 @@ class Outlook:
 
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
-displays = [Outlook() ]
+def init():
+    return [ Outlook() ]
