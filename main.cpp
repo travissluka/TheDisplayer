@@ -172,8 +172,8 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   //set the position of the web widgets
   this->header->setGeometry(PAD_LEFT, PAD_TOP, width, headerHeight);
   //  this->center_full->setGeometry(0,headerHeight, width,height-headerHeight-footerHeight);
-  this->center_half_1->setGeometry(PAD_LEFT, headerHeight+PAD_TOP, width, halfHeight);
-  this->center_half_2->setGeometry(PAD_LEFT, headerHeight+PAD_TOP+halfHeight,  width, halfHeight);
+  this->center_half_2->setGeometry(PAD_LEFT, headerHeight+PAD_TOP, width, halfHeight);
+  this->center_half_1->setGeometry(PAD_LEFT, headerHeight+PAD_TOP+halfHeight,  width, halfHeight);
   this->footer->setGeometry(PAD_LEFT, headerHeight+PAD_TOP+2*halfHeight, width, footerHeight);
 
 }
