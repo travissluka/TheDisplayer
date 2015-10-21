@@ -1,0 +1,22 @@
+export LD_LIBRARY_PATH=/opt/vc/lib
+xset s off
+xset -dpms
+xset s noblank
+xsetroot -solid "#E03A3E"
+xloadimage -onroot -rotate 90  /opt/displayer/splash.png
+
+while true; do
+    echo "waiting for network to come up..."
+    res=1
+    while [ $res != 0 ]; do
+      sleep 1
+      ping 8.8.8.8 -c 1
+      res=$?
+    done
+    
+    echo "network is up, launching displayer..."
+    cd /opt/displayer/
+    ./display config.py
+    echo "screen crashed, waiting for a restart..."
+    sleep 10
+done
