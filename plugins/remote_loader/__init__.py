@@ -10,16 +10,19 @@ import imp
 import shutil
 import traceback,sys
 
-remoteDirs=(
-    "http://www.atmos.umd.edu/~tsluka/the_displayer/right",
-    "http://www.atmos.umd.edu/~tsluka/the_displayer/left",
-)
 
+################################################################################
+## REQUIRED configuration
+################################################################################
+
+## 'remote_dirs' - an arry of html url locations
+
+################################################################################
 
 def init():
     classes = []
     
-    for rd in remoteDirs:
+    for rd in remote_dirs:
         ## get the list of displays produced
         ## by this remote location
         log.info("reading: "+rd)

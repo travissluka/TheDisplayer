@@ -20,9 +20,6 @@ import re
 ## Configurables
 #########################
 
-location = (38.8967, 76.9275)   # College Park, MD
-office   = 'LWX'
-
 ## The categorical outlook levels in ascending order of severity are:
 ##   (TSTM, MRGL, SLGT, ENH, MDT, HIGH)
 
@@ -53,7 +50,7 @@ class Outlook:
         
         ## determine which day outlooks we need to display
         allOutlooks = spc.getOutlooksForLoc()
-        myOutlooks  = spc.getOutlooksForLoc(location)
+        myOutlooks  = spc.getOutlooksForLoc(latlon)
         imgToShow=[]
         for day in allOutlooks:
 
@@ -87,7 +84,7 @@ class Outlook:
             dl.retrieve("http://www.spc.noaa.gov/products/outlook/"+img, tmpdir+'/'+img)
 
         ## also look at mesoscale discussions for our office location
-        msd = spc.getMesoDiscussions(office)
+        msd = spc.getMesoDiscussions(nws_office)
         count = 10
         for m in msd:
             res = re.search(r'\<img.*src\=\"(.*?)\".*\>', m['description'])

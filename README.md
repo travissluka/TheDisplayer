@@ -1,8 +1,20 @@
 # TheDisplayer
-Display server for the AOSC hall monitors. 
+Display server for the AOSC hall monitors.
 
-Requires qt4, and qt4 webkit
 
-build using 'qmake' then 'make'
+## Compiling
+Requires
+* python 2 with
+ * xmltodict
+ * feedparser
+ * shapely
+* qt5 (or qt4) with qtwebkit
+* gifsicle
 
-run with './display config'
+build using ``qmake`` then ``make``
+
+## Configuration
+todo
+
+## Pluin system description
+todo

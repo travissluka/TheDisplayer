@@ -115,4 +115,5 @@ class CSSWxBugDisplay:
 ## the list of all available displays in this plugin,
 ## as required by the plugin loader
 def init():
+    wu.data_url = data_url
     return [CSSWxBugDisplay() ]

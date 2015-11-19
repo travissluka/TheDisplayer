@@ -146,7 +146,7 @@ def init(configFile):
 
     ## load in the required display plugins and get the list of display classes from
     ##  each (some plugins might provide more than one display)
-    for cp in config.plugins:
+    for cp in config.plugins.keys():
         if cp not in availPlugins:
             log.error('Plugin: "{0}" specified in config is not available.'
               .format(cp))
@@ -154,7 +154,17 @@ def init(configFile):
             try:
                 ## save the current working directory in case the plugin messes with it
                 cwd = os.getcwd()
+                ## import the module
                 plugin     = importlib.import_module('plugins.'+cp)
+
+                ## set the values of any configurable parameters found in the
+                ## config.py file (both global and per module configuration)
+                for c in config.config:
+                    plugin.__dict__[c] = config.config[c]
+                for c in config.plugins[cp]:
+                    plugin.__dict__[c] = config.plugins[cp][c]
+
+                ## generate the display classes from the plugin
                 newClasses = [{'script':p} for p in plugin.init()]
                 for d in newClasses:
                     log.info('Plugin loaded: {0}'.format(getClassName(d['script'])))

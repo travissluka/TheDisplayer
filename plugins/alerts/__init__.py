@@ -7,17 +7,23 @@ import datetime as dt
 import os, shutil
 import re
 
-#countycode='MDC510' # baltimore city
-countycode='MDC033' # College Park
-url='http://alerts.weather.gov/cap/wwaatmget.php?x='+countycode+'&y=0'
-#url='http://alerts.weather.gov/cap/md.php?x=0'
+
+################################################################################
+## REQUIRED configuration
+################################################################################
+
+
+## countycode - eg MDC033 for college park, MD
+
+
+################################################################################
+
 
 #TODO, wrap these variables with a lock
 mainAlert = None
 topAlerts = None
 severity = None
 
-################################################################################
 
 def getAlerts():
     # get the feed and parse it
@@ -218,4 +224,7 @@ class AlertText:
     
 
 def init():
+    global url
+    url='http://alerts.weather.gov/cap/wwaatmget.php?x='+countycode+'&y=0'
+
     return [Header(), Footer()]
