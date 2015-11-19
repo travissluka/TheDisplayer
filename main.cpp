@@ -217,7 +217,7 @@ void MainWindow::updateTimer(){
 
     //update the web url for that display location
     view->load(QUrl(url));
-    view->reload();
+    //    view->reload();
   }
   Py_DECREF(result);
 }
