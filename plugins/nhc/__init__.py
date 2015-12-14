@@ -42,22 +42,33 @@ class NHC:
         }
         shutil.copy('style.css',tmpdir)
         
-        activeStorms = []
+        activeStorms = {}
         
         feed = xmltodict.parse(urllib2.urlopen(rssUrl).read())
 
         ## get a list of all active storms
-        for f in feed['rss']['channel']['item']:
-            if 'nhc:Cyclone' in f.keys():
-                activeStorms.append( f['nhc:Cyclone'] )
+        def proc(item):
+            if 'nhc:Cyclone' in item.keys():
+                s = item['nhc:Cyclone']
+                s_id = '{0:02d}'.format(int(s['nhc:atcf'][2:4]))
+                s_name = (s['nhc:type']+' '+s['nhc:name']).title()
+                activeStorms[s_id]=s_name
+        ## if there are more then one items
+        if type(feed['rss']['channel']['item']) == type([]):       
+            for f in feed['rss']['channel']['item']:
+                proc(f)
+        else:
+            proc(feed['rss']['channel']['item'])
+                
+        print activeStorms
         params['enabled'] = len(activeStorms) > 0
 
         ## download images for each storm, and generate html content for each
         blocks = []
         yr = str(dt.datetime.now().year)[2:]
         for s in activeStorms:
-            stormNum = '{0:02d}'.format(int(s['nhc:atcf'][2:4]))
-            stormName = (s['nhc:type']+' '+s['nhc:name']).title()
+            stormNum = s
+            stormName = activeStorms[s]
 
             ## plot the 5 day warning cones
             plots = ['W5']
