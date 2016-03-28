@@ -25,7 +25,7 @@ class Imagery:
         shutil.copy('imagery.html', tmpdir)
 
         ## arguments to be used by "gifsicle" for altering the animated gifs
-        args = '--loop -d 25 "#0--1" -d300 "#-1" --colors=256 -O2'
+        args = '--loop -d 25 "#0--1" -d300 "#-1" --colors=256 -O2 --resize "1064"x"769"'
 
         ## visibile imagery
         filename="http://www.ssd.noaa.gov/goes/east/eaus/vis-animated.gif"

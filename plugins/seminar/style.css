@@ -1,0 +1,145 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab:700);
+html{
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+    text-align:center;
+    font-family: 'Roboto Slab', serif;   
+}
+
+
+.nextSeminar {
+    display:table;
+    height:600px;
+    width:100%;
+}
+.nextSeminar .separator{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border:1px solid gray;
+    width:10%;
+    margin-left:45%;		    
+}
+.nextSeminar .seminar {
+    vertical-align:middle;
+    display:table-cell;    
+    font-size:100%;
+}
+.nextSeminar .title {
+    line-height:120%;
+    font-family: 'Roboto Slab', serif;
+    margin-left:100px;
+    margin-right:100px;   
+    font-weight:bold;
+    font-size:34pt;
+    text-align:center;
+}
+.nextSeminar .speaker{
+    color:#B00;
+    text-align:center;
+    font-size:150%;
+}
+.nextSeminar .speaker .name{
+    font-weight:bold;
+    padding-bottom:0.0em;
+    font-size:150%;
+}
+.nextSeminar .date{
+    margin-top:1em;
+    text-align:center;
+    font-weight:bold;
+    color:#B00;
+    font-size:200%;
+}
+.nextSeminar .abstract{
+    margin-left:2em;
+    margin-right:2em;
+    text-align:justify;
+    padding-top:0em;
+    height:0px;
+    visibility:hidden;
+}
+.nextSeminar .info_wrapper{
+    position:absolute;
+    top:710px;
+    right:1em;
+}
+.nextSeminar .more_info{
+    text-align:right;
+    padding-top:1.2em;
+    line-height:110%;
+    color:#666;
+    font-size:16px;
+    width:400px;
+    float:left;
+}
+.qrcode {
+    position:absolute;
+    right:0em;
+    top:-100px;
+}
+#qrcode{
+    width:120px;
+}
+
+.otherSeminars{
+    margin-top:1em;
+    width:550px;
+    height:150px;
+    background-color:#EEF;
+    border-radius:0px 50px 0px 0px;
+    padding: 0.5em;
+    padding-left:0px;
+    color:#333;
+    position:absolute;
+    top:650px;
+}
+.otherSeminars h1{
+    margin-left:0.5em;
+    line-height:100%;
+    font-size:16pt;
+    color:#039;
+    width:300px;
+    top:690px;
+    text-align:left;
+    font-family: 'Roboto Slab', serif;
+    
+}
+
+.otherSeminars .seminar {
+    width:170px;
+    float:left;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    text-align:center;
+    font-size:10pt;       
+}
+.otherSeminars .seminar:first-child{
+    border:none;
+}
+.otherSeminars .date{
+    padding-bottom: 0.5em;
+    font-weight:bold;
+}
+.otherSeminars .title{
+    visibility:hidden;
+    height:0px;
+    font-weight:bold;
+    font-size: 12pt;
+    padding-top:1em;
+    padding-bottom:1em;
+    line-height: 100%;
+}
+.otherSeminars .speaker{
+    text-align:center;
+    font-size:10pt;   
+}
+
+.otherSeminars .name{
+    color:#226;    
+    font-size: 14pt;
+    font-family: 'Roboto Slab', serif;
+    line-height:100%;
+}
+

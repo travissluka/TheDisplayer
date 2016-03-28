@@ -16,18 +16,14 @@ h2 {
 
 }
 
-.outer {
- display: table;
- position: relative;
- height:100%;
- width: 100%;
+.header_wrapper{
 }
 
-.middle {
-  display: table-cell;
-  vertical-align: middle;
-#  border-bottom: 3px solid #555;
+.header_img{
+    margin-left:309px;
 }
+
+
 
 .inner {
     margin-left:auto;
@@ -35,7 +31,13 @@ h2 {
     width: 900px;
     text-align:center;
 }
+.outer {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
 
+}
 
 
 

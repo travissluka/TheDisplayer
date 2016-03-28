@@ -1,32 +1,39 @@
 html {
     position:relative;
     overflow: hidden;
-    height: auto;
+    height: 819px;
+    width:1064px;
     margin: 8px;
-    margin-bottom: 20px;
-
 }
 body{
     position:relative;
-    height:auto;
+    height:819px;
+    width:1064px;
     margin:0px;
 }
 .wrapper{
-    display:table;
-    width:100%;
-    height:100%;
+#    display:table;
+    width:1064px;
+    height:819px;
 }
 .header{
-    margin-top:10px;
+    margin:0px;
     position:relative;
-    display:table-row;
-    width:100%;
-    height:auto;
+#    display:table-row;
+    overflow:hidden;
+    background-color:#039;
+    height:50px;
+    width:1064px;
 }
 .content{
-    display:table-row;
-    height:100%;
-    width:100%;
+    #    display:table-row;
+    overflow:hidden;
+    height:769px;
+    width:1064px;;
+#    border-left: 1px solid #039;
+#    border-right: 1px solid #039;    
+#    border-bottom: 1px solid #039;    
+
 }
 
 
