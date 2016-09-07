@@ -57,7 +57,7 @@ def getOutlooksForLoc(center=None):
         dy=str(day)
         if day < 10:
             dy = 'y'+dy
-        shapeFileUrl = "http://weather.noaa.gov/pub/data/raw/wu/wuus{0:02d}.kwns.pts.d{1}.txt".format(day,dy)
+        shapeFileUrl = "http://tgftp.nws.noaa.gov/data/raw/wu/wuus{0:02d}.kwns.pts.d{1}.txt".format(day,dy)
         shapeFile = urllib2.urlopen(shapeFileUrl).read()
         
         ## split the file up into the individual outlook categories, and get the shapes for each
