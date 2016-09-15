@@ -102,8 +102,8 @@ def writeEntry(html, xml, short=False):
         w('<div class="separator"></div>')
         print_speaker()
         w('<div class="info_wrapper">')
-        w('<div class="qrcode"><img id="qrcode" src="code.png" /></div>')
-        w('<div class="more_info">For more information visit</br> https://www.atmos.umd.edu/seminar</br>Scan the QR code, or contact</br>')
+#        w('<div class="qrcode"><img id="qrcode" src="code.png" /></div>')
+        w('<div class="more_info">For more information visit</br> https://www.atmos.umd.edu/seminar</br> or contact</br>')
         if('seminar:host' in xml):
             w(xml['seminar:host']['name']+' (')
             w(xml['seminar:host']['email']+')')
